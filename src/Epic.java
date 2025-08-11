@@ -7,10 +7,6 @@ public class Epic extends Task {
         super(-1, taskName, taskDescription, StatusTask.NEW);
     }
 
-    public Epic(int id, String name, String description) {
-        super(id, name, description, null);
-    }
-
     protected Epic(int id, String taskName, String taskDescription, StatusTask statusTask) {
         super(id, taskName, taskDescription, statusTask);
     }
@@ -24,6 +20,10 @@ public class Epic extends Task {
     }
 
     public StatusTask updateStatus(ArrayList<SubTask> epicSubtasks) {
+        if (epicSubtasks.isEmpty()) {
+            return StatusTask.NEW;  // Нет подзадач -> статус NEW
+        }
+
         int newCount = 0;
         int doneCount = 0;
         int inProgressCount = 0;

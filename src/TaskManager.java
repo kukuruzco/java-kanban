@@ -56,6 +56,7 @@ public class TaskManager {
     }
 
     public void deleteAllEpics() {
+        subtasks.clear();
         epics.clear();
     }
 
@@ -95,6 +96,11 @@ public class TaskManager {
     }
 
     public SubTask addSubTask(SubTask subtask) {
+        int epicId = subtask.getEpicId();
+        if (!epics.containsKey(epicId)) {
+            System.out.println("Эпик с ID " + epicId + " не существует");
+        }
+
         int newId = ++lastId;
         SubTask newSubTask = new SubTask(
                 newId,
@@ -104,6 +110,8 @@ public class TaskManager {
                 subtask.getEpicId()
         );
         subtasks.put(newId, newSubTask);
+        System.out.println(newSubTask.getEpicId());
+        updateEpicStatus(newSubTask.getEpicId());
         return newSubTask;
     }
 
@@ -123,6 +131,24 @@ public class TaskManager {
 
     public SubTask getSubTaskById(int id) {
         return subtasks.get(id);
+    }
+
+    public void deleteSubTaskById(int subTaskId) {
+        SubTask subTask = subtasks.get(subTaskId);
+        if (subTask == null) {
+            System.out.println("Подзадача с ID " + subTaskId + " не найдена");
+        }
+
+        int epicId = subTask.getEpicId();
+        subtasks.remove(subTaskId);
+        updateEpicStatus(epicId);
+    }
+
+    public void deleteAllSubTasks() {
+        subtasks.clear();
+        for (int epicId : epics.keySet()) {
+            updateEpicStatus(epicId);
+        }
     }
 
     public void updateSubTask(SubTask updatedSubTask) {
@@ -148,4 +174,5 @@ public class TaskManager {
 
         epics.put(epicId, updatedEpic);
     }
+
 }
