@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Epic extends Task {
     private ArrayList<Integer> subtaskIds = new ArrayList<>();
@@ -51,4 +52,23 @@ public class Epic extends Task {
         }
         return StatusTask.IN_PROGRESS;     // Смешанные NEW и DONE -> IN_PROGRESS
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Epic epic = (Epic) o;
+        return Objects.equals(getId(), epic.getId()) &&
+                Objects.equals(getTaskName(), epic.getTaskName()) &&
+                Objects.equals(getTaskDescription(), epic.getTaskDescription()) &&
+                getStatusTask() == epic.getStatusTask() &&
+                Objects.equals(subtaskIds, epic.subtaskIds);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getTaskName(), getTaskDescription(),
+                getStatusTask(), subtaskIds);
+    }
+
 }
