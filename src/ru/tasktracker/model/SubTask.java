@@ -1,3 +1,5 @@
+package ru.tasktracker.model;
+
 import java.util.ArrayList;
 
 public class SubTask extends Task {

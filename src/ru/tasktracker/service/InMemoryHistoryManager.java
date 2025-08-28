@@ -1,6 +1,10 @@
+package ru.tasktracker.service;
+
+import ru.tasktracker.model.Task;
+
 import java.util.ArrayList;
 
-public class InMemoryHistoryManager implements HistoryManager{
+public class InMemoryHistoryManager implements HistoryManager {
     protected final ArrayList<Task> historyList = new ArrayList<>(10);
 
     public void addHistoryList(Task task) {
@@ -14,3 +18,4 @@ public class InMemoryHistoryManager implements HistoryManager{
         return historyList;
     }
 }
+

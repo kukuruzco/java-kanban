@@ -1,3 +1,12 @@
+package ru.tasktracker.main;
+
+import ru.tasktracker.model.Epic;
+import ru.tasktracker.model.StatusTask;
+import ru.tasktracker.model.SubTask;
+import ru.tasktracker.model.Task;
+import ru.tasktracker.service.TaskManager;
+import ru.tasktracker.util.Managers;
+
 public class Main {
 
     public static void main(String[] args) {

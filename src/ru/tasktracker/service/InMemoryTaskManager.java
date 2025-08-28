@@ -1,3 +1,10 @@
+package ru.tasktracker.service;
+
+import ru.tasktracker.model.Epic;
+import ru.tasktracker.model.StatusTask;
+import ru.tasktracker.model.SubTask;
+import ru.tasktracker.model.Task;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -201,3 +208,4 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setStatusTask(newEpicStatus);
     }
 }
+

@@ -1,3 +1,5 @@
+package ru.tasktracker.model;
+
 import java.util.Objects;
 
 public class Task {
@@ -13,7 +15,7 @@ public class Task {
         this.statusTask = StatusTask.NEW;
     }
 
-    protected Task(int id, String taskName, String taskDescription, StatusTask statusTask) {
+    public Task(int id, String taskName, String taskDescription, StatusTask statusTask) {
         this.id = id;
         this.taskName = taskName;
         this.taskDescription = taskDescription;
@@ -40,7 +42,7 @@ public class Task {
 
     public void setTaskDescription(String taskDescription) { this.taskDescription = taskDescription; }
 
-    protected void setStatusTask(StatusTask statusTask) {
+    public void setStatusTask(StatusTask statusTask) {
         this.statusTask = statusTask;
     }
 
@@ -63,3 +65,4 @@ public class Task {
     }
 
 }
+

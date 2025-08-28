@@ -1,3 +1,9 @@
+package ru.tasktracker.service;
+
+import ru.tasktracker.model.Epic;
+import ru.tasktracker.model.SubTask;
+import ru.tasktracker.model.Task;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,3 +49,4 @@ public interface TaskManager {
     void updateSubTask(SubTask updatedSubTask);
 
 }
+

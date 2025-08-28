@@ -1,14 +1,16 @@
+package ru.tasktracker.model;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Epic extends Task {
     private ArrayList<Integer> subtaskIds = new ArrayList<>();
 
-    protected Epic(String taskName, String taskDescription) {
+    public Epic(String taskName, String taskDescription) {
         super(-1, taskName, taskDescription, StatusTask.NEW);
     }
 
-    protected Epic(int id, String taskName, String taskDescription, StatusTask statusTask) {
+    public Epic(int id, String taskName, String taskDescription, StatusTask statusTask) {
         super(id, taskName, taskDescription, statusTask);
     }
 
