@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,13 +20,13 @@ class ManagersTest {
         assertNotNull(manager.getAllTasks(), "getAllTasks() не должен возвращать null");
         assertNotNull(manager.getAllEpics(), "getAllEpics() не должен возвращать null");
         assertNotNull(manager.getAllSubTasks(), "getAllSubTasks() не должен возвращать null");
-        assertNotNull(manager.getHistoryList(), "getHistory() не должен возвращать null");
+        assertNotNull(manager.getHistory(), "getHistory() не должен возвращать null");
 
         // Проверяем, что списки пусты но готовы к работе
         assertEquals(0, manager.getAllTasks().size());
         assertEquals(0, manager.getAllEpics().size());
         assertEquals(0, manager.getAllSubTasks().size());
-        assertEquals(0, manager.getHistoryList().size());
+        assertEquals(0, manager.getHistory().size());
     }
 
     @Test
@@ -44,7 +44,7 @@ class ManagersTest {
         historyManager.addHistoryList(task);
 
         // Должен уметь возвращать историю
-        var history = historyManager.getHistoryList();
+        var history = historyManager.getHistory();
         assertNotNull(history, "История не должна быть null");
         assertTrue(history.size() <= 10, "История не должна превышать лимит");
     }
@@ -59,7 +59,7 @@ class ManagersTest {
         Task retrieved = taskManager.getTaskById(task.getId());
 
         // Проверяем, что история работает
-        ArrayList<Task> history = taskManager.getHistoryList();
+        List<Task> history = taskManager.getHistory();
         assertNotNull(history, "История не должна быть null");
 
     }

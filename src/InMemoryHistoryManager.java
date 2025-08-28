@@ -10,7 +10,7 @@ public class InMemoryHistoryManager implements HistoryManager{
         historyList.add(task);
     }
 
-    public ArrayList<Task> getHistoryList() {
+    public ArrayList<Task> getHistory() {
         return historyList;
     }
 }

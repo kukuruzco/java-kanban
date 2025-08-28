@@ -1,7 +1,8 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
-    ArrayList<Task> getHistoryList();
+    List<Task> getHistory();
 
     Task addTask(Task task);
 

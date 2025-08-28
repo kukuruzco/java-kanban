@@ -1,4 +1,3 @@
-import jdk.internal.icu.text.UnicodeSet;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +14,7 @@ class HistoryManagerTest {
         TaskManager taskManager = Managers.getDefault();
         Task task = taskManager.addTask(new Task("TestTask", "TestTask Description"));
         historyManager.addHistoryList(task);
-        final List<Task> history = historyManager.getHistoryList();
+        final List<Task> history = historyManager.getHistory();
         assertNotNull(history, "После добавления задачи, история не должна быть пустой.");
         assertEquals(1, history.size(), "После добавления задачи, история не должна быть пустой.");
     }
@@ -32,7 +31,7 @@ class HistoryManagerTest {
         historyManager.addHistoryList(updatedTask);
 
         // Получаем историю
-        List<Task> history = historyManager.getHistoryList();
+        List<Task> history = historyManager.getHistory();
 
         // Проверяем, что в истории две версии задачи
         assertEquals(2, history.size(), "В истории должно быть 2 версии задачи");
