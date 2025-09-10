@@ -31,6 +31,7 @@ public class Main {
         Epic epic = taskManager.getEpicById(4);
         System.out.println(epic);
         System.out.println(epic.getSubtaskIds());
+        taskManager.getSubTaskById(6);
 
         printAllTasks(taskManager);
 
@@ -49,7 +50,7 @@ public class Main {
         taskManager.updateSubTask(new SubTask(7, "Замена дверей",
                 "Установка новых дверей", StatusTask.IN_PROGRESS, 4));
 
-        taskManager.getEpicById(3);
+//        taskManager.getEpicById(3);
 
         printAllTasks(taskManager);
 

@@ -7,6 +7,7 @@ import ru.tasktracker.model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, Task> tasks = new HashMap<>();
@@ -21,7 +22,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getHistory() {
+    public List<Task> getHistory() {
         return historyManager.getHistory();
     }
 
@@ -117,19 +118,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int Id) {
-        historyManager.addHistoryList(tasks.get(Id));
+        historyManager.addHistory(tasks.get(Id));
         return tasks.get(Id);
     }
 
     @Override
     public Epic getEpicById(int Id) {
-        historyManager.addHistoryList(epics.get(Id));
+        historyManager.addHistory(epics.get(Id));
         return epics.get(Id);
     }
 
     @Override
     public SubTask getSubTaskById(int Id) {
-        historyManager.addHistoryList(subtasks.get(Id));
+        historyManager.addHistory(subtasks.get(Id));
         return subtasks.get(Id);
     }
 

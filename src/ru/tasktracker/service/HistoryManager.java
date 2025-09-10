@@ -1,11 +1,10 @@
 package ru.tasktracker.service;
-
 import ru.tasktracker.model.Task;
-
-import java.util.ArrayList;
+import java.util.List;
 
 public interface HistoryManager {
-    public void addHistoryList(Task task);
-    public ArrayList<Task> getHistory();
+    void addHistory(Task task);
+    void remove(int id);
+    List<Task> getHistory();
 }
 

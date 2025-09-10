@@ -18,7 +18,7 @@ class HistoryManagerTest {
     void addTaskToHistory() {
         TaskManager taskManager = Managers.getDefault();
         Task task = taskManager.addTask(new Task("TestTask", "TestTask Description"));
-        historyManager.addHistoryList(task);
+        historyManager.addHistory(task);
         final List<Task> history = historyManager.getHistory();
         assertNotNull(history, "После добавления задачи, история не должна быть пустой.");
         assertEquals(1, history.size(), "После добавления задачи, история не должна быть пустой.");
@@ -29,11 +29,11 @@ class HistoryManagerTest {
     void testHistoryManagerPreservesTaskVersions() {
         // Создаем первоначальную версию задачи
         Task originalTask = new Task(1, "Original Task", "Original description", StatusTask.NEW);
-        historyManager.addHistoryList(originalTask);
+        historyManager.addHistory(originalTask);
 
         // Создаем обновленную версию задачи (тот же ID, но другие данные)
         Task updatedTask = new Task(1, "Updated Task", "Updated description", StatusTask.IN_PROGRESS);
-        historyManager.addHistoryList(updatedTask);
+        historyManager.addHistory(updatedTask);
 
         // Получаем историю
         List<Task> history = historyManager.getHistory();
