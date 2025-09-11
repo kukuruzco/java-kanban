@@ -45,7 +45,7 @@ class ManagersTest {
         // Должен уметь добавлять задачи
         Task task = new Task("Test", "Description");
 
-        historyManager.addHistoryList(task);
+        historyManager.addHistory(task);
 
         // Должен уметь возвращать историю
         var history = historyManager.getHistory();

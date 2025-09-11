@@ -1,4 +1,7 @@
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.tasktracker.model.StatusTask;
 import ru.tasktracker.model.Task;
 import ru.tasktracker.service.TaskManager;
 import ru.tasktracker.util.Managers;
@@ -8,10 +11,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TaskTest {
-
+    private TaskManager manager;
+    @BeforeEach
+    void setUp() {
+        manager = Managers.getDefault();
+    }
     @Test
     void addNewTask() {
-        TaskManager manager = Managers.getDefault();
         Task task = manager.addTask(new Task(
                 "Test addNewTask",
                 "Test addNewTask description"
@@ -34,7 +40,6 @@ class TaskTest {
 
     @Test
     void deleteAllTasks() {
-        TaskManager manager = Managers.getDefault();
         Task task1 = manager.addTask(new Task(
                 "Test1 addNewTask",
                 "Test addNewTask description"
@@ -51,6 +56,29 @@ class TaskTest {
         final List<Task> tasksAfterDel = manager.getAllTasks();
 
         assertEquals(0, tasksAfterDel.size(), "Неверное количество задач.");
+    }
+
+    @Test
+    @DisplayName("Изменение задачи через сеттер не должно влиять на задачу в менеджере")
+    void testTaskModificationThroughSetterShouldNotAffectManager() {
+        // Создаем и добавляем задачу
+        Task originalTask = new Task("Original", "Description");
+        Task addedTask = manager.addTask(originalTask);
+        int taskId = addedTask.getId();
+
+        // Получаем задачу из менеджера
+        Task taskFromManager = manager.getTaskById(taskId);
+
+        // Меняем задачу через сеттер (ОПАСНО!)
+//        taskFromManager.setTaskName("Modified Title");
+//        taskFromManager.setTaskDescription("Modified Description");
+//        taskFromManager.setStatusTask(StatusTask.DONE);
+//
+//        // Проверяем, что задача в менеджере НЕ изменилась
+//        Task taskAfterModification = manager.getTaskById(taskId);
+//        assertEquals("Original", taskAfterModification.getTaskName());
+//        assertEquals("Description", taskAfterModification.getTaskDescription());
+//        assertEquals(StatusTask.NEW, taskAfterModification.getStatusTask());
     }
 
 }

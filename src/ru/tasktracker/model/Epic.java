@@ -14,12 +14,25 @@ public class Epic extends Task {
         super(id, taskName, taskDescription, statusTask);
     }
 
+    public Epic(int id, String taskName, String taskDescription, StatusTask statusTask, ArrayList<Integer> subtaskIds) {
+        super(id, taskName, taskDescription, statusTask);
+        this.subtaskIds = new ArrayList<>(subtaskIds);
+    }
+
     public ArrayList<Integer> getSubtaskIds() {
         return subtaskIds;
     }
 
-    public void setSubtaskIds(ArrayList<Integer> subtaskIds) {
-        this.subtaskIds = subtaskIds;
+    public Epic withName(String newName) {
+        return new Epic(getId(), newName, getTaskDescription(), getStatusTask());
+    }
+
+    public Epic withDescription(String newDescription) {
+        return new Epic(getId(), getTaskName(), newDescription, getStatusTask());
+    }
+
+    public Epic withStatus(StatusTask newStatus) {
+        return new Epic(getId(), getTaskName(), getTaskDescription(), newStatus);
     }
 
     public StatusTask updateStatus(ArrayList<SubTask> epicSubtasks) {
@@ -65,8 +78,7 @@ public class Epic extends Task {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getTaskName(), getTaskDescription(),
-                getStatusTask(), subtaskIds);
+        return Objects.hash(getId());
     }
 
 }

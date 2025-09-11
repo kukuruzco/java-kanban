@@ -38,13 +38,13 @@ public class Task {
         return statusTask;
     }
 
-    public void setTaskName(String taskName) { this.taskName = taskName; }
-
-    public void setTaskDescription(String taskDescription) { this.taskDescription = taskDescription; }
-
-    public void setStatusTask(StatusTask statusTask) {
-        this.statusTask = statusTask;
-    }
+//    public void setTaskName(String taskName) { this.taskName = taskName; }
+//
+//    public void setTaskDescription(String taskDescription) { this.taskDescription = taskDescription; }
+//
+//    public void setStatusTask(StatusTask statusTask) {
+//        this.statusTask = statusTask;
+//    }
 
     @Override
     public boolean equals(Object o) {

@@ -19,6 +19,26 @@ public class SubTask extends Task {
         return epicId;
     }
 
+    public SubTask withId(int newId) {
+        return new SubTask(newId, getTaskName(), getTaskDescription(), getStatusTask(), epicId);
+    }
+
+    public SubTask withName(String newName) {
+        return new SubTask(getId(), newName, getTaskDescription(), getStatusTask(), epicId);
+    }
+
+    public SubTask withDescription(String newDescription) {
+        return new SubTask(getId(), getTaskName(), newDescription, getStatusTask(), epicId);
+    }
+
+    public SubTask withStatus(StatusTask newStatus) {
+        return new SubTask(getId(), getTaskName(), getTaskDescription(), newStatus, epicId);
+    }
+
+    public SubTask withEpicId(int newEpicId) {
+        return new SubTask(getId(), getTaskName(), getTaskDescription(), getStatusTask(), newEpicId);
+    }
+
     @Override
     public String toString() {
         return super.toString() + " | EpicID: " + epicId;
