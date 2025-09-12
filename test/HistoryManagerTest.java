@@ -31,7 +31,7 @@ class HistoryManagerTest {
         Task originalTask = new Task(1, "Original Task", "Original description", StatusTask.NEW);
         historyManager.addHistory(originalTask);
 
-        // Создаем обновленную версию задачи (тот же ID, но другие данные)
+        // Создаем обновленную версию задачи (тот же id, но другие данные)
         Task updatedTask = new Task(1, "Updated Task", "Updated description", StatusTask.IN_PROGRESS);
         historyManager.addHistory(updatedTask);
 
@@ -53,16 +53,16 @@ class HistoryManagerTest {
         assertEquals("Updated description", firstVersion.getTaskDescription());
         assertEquals(StatusTask.IN_PROGRESS, firstVersion.getStatusTask());
 
-        // Проверяем, что ID одинаковые (это одна и та же задача)
-        assertEquals(originalTask.getId(), updatedTask.getId());
-        assertEquals(originalTask.getId(), firstVersion.getId());
-        assertEquals(originalTask.getId(), lastVersion.getId());
+        // Проверяем, что id одинаковые (это одна и та же задача)
+        assertEquals(originalTask.getid(), updatedTask.getid());
+        assertEquals(originalTask.getid(), firstVersion.getid());
+        assertEquals(originalTask.getid(), lastVersion.getid());
 
         // Создаем новую задачу
         Task newTask = new Task(2, "New Task", "New description", StatusTask.NEW);
         historyManager.addHistory(newTask);
 
-        // Создаем обновленную версию 1-й задачи (тот же ID, но другие данные)
+        // Создаем обновленную версию 1-й задачи (тот же id, но другие данные)
         Task updatedFirstTask = new Task(1, "Updated first Task", "Updated first description", StatusTask.DONE);
         historyManager.addHistory(updatedFirstTask);
 
@@ -72,16 +72,16 @@ class HistoryManagerTest {
         // Проверяем, что в истории осталось 2 задачи
         assertEquals(2, updatedHistory.size(), "В истории должно быть 2 задачи");
 
-        // Проверяем, что теперь на первой позиции в списке задача с ID 2
+        // Проверяем, что теперь на первой позиции в списке задача с id 2
         Task firstPos = updatedHistory.getFirst();
-        assertEquals(2, firstPos.getId());
+        assertEquals(2, firstPos.getid());
         assertEquals("New Task", firstPos.getTaskName());
         assertEquals("New description", firstPos.getTaskDescription());
         assertEquals(StatusTask.NEW, firstPos.getStatusTask());
 
-        // Проверяем, что последнюю позицию в списке задач теперь занимает обновленная версия с ID 1
+        // Проверяем, что последнюю позицию в списке задач теперь занимает обновленная версия с id 1
         Task secondPos = updatedHistory.getLast();
-        assertEquals(1, secondPos.getId());
+        assertEquals(1, secondPos.getid());
         assertEquals("Updated first Task", secondPos.getTaskName());
         assertEquals("Updated first description", secondPos.getTaskDescription());
         assertEquals(StatusTask.DONE, secondPos.getStatusTask());

@@ -23,9 +23,9 @@ class TaskTest {
                 "Test addNewTask description"
         ));
 
-        int taskId = task.getId();
+        int taskid = task.getid();
 
-        final Task savedTask = manager.getTaskById(taskId);
+        final Task savedTask = manager.getTaskByid(taskid);
 
         System.out.println(savedTask);
         assertNotNull(savedTask, "Задача не найдена.");
@@ -64,10 +64,10 @@ class TaskTest {
         // Создаем и добавляем задачу
         Task originalTask = new Task("Original", "Description");
         Task addedTask = manager.addTask(originalTask);
-        int taskId = addedTask.getId();
+        int taskid = addedTask.getid();
 
         // Получаем задачу из менеджера
-        Task taskFromManager = manager.getTaskById(taskId);
+        Task taskFromManager = manager.getTaskByid(taskid);
 
         // Меняем задачу через сеттер (ОПАСНО!)
 //        taskFromManager.setTaskName("Modified Title");
@@ -75,7 +75,7 @@ class TaskTest {
 //        taskFromManager.setStatusTask(StatusTask.DONE);
 //
 //        // Проверяем, что задача в менеджере НЕ изменилась
-//        Task taskAfterModification = manager.getTaskById(taskId);
+//        Task taskAfterModification = manager.getTaskByid(taskid);
 //        assertEquals("Original", taskAfterModification.getTaskName());
 //        assertEquals("Description", taskAfterModification.getTaskDescription());
 //        assertEquals(StatusTask.NEW, taskAfterModification.getStatusTask());

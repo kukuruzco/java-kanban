@@ -60,7 +60,7 @@ class ManagersTest {
 
         // Создаем и получаем задачу - она должна добавиться в историю
         Task task = taskManager.addTask(new Task("TestTask", "Description"));
-        Task retrieved = taskManager.getTaskById(task.getId());
+        Task retrieved = taskManager.getTaskByid(task.getid());
 
         // Проверяем, что история работает
         List<Task> history = taskManager.getHistory();

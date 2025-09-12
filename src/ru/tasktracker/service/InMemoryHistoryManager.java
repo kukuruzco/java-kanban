@@ -36,17 +36,16 @@ public class InMemoryHistoryManager implements HistoryManager {
             return;
         }
 
-        int taskId = task.getId();
+        int taskid = task.getid();
 
-        // Если задача уже есть в истории, удаляем её старую позицию
-        if (nodeMap.containsKey(taskId)) {
-            removeNode(nodeMap.get(taskId));
+        if (nodeMap.containsKey(taskid)) {
+            removeNode(nodeMap.get(taskid));
         }
 
         // Добавляем задачу в конец списка
         Node newNode = new Node(task);
         linkLast(newNode);
-        nodeMap.put(taskId, newNode);
+        nodeMap.put(taskid, newNode);
         size++;
     }
 
@@ -90,7 +89,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             tail = node.prev;
         }
 
-        nodeMap.remove(node.task.getId());
+        nodeMap.remove(node.task.getid());
         size--;
     }
 
@@ -121,7 +120,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         nodeMap.clear();
     }
 
-    public boolean contains(int taskId) {
-        return nodeMap.containsKey(taskId);
+    public boolean contains(int taskid) {
+        return nodeMap.containsKey(taskid);
     }
 }

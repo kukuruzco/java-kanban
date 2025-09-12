@@ -22,16 +22,16 @@ public class Main {
         taskManager.addSubTask(new SubTask("Демонтаж стен", "Снести перегородку", 4));
         taskManager.addSubTask(new SubTask("Замена дверей", "Монтаж дверных проемов", 4));
 
-        taskManager.getTaskById(1);
-        taskManager.getTaskById(2);
-        taskManager.getSubTaskById(6);
-        taskManager.getTaskById(2);
-        taskManager.getEpicById(4);
+        taskManager.getTaskByid(1);
+        taskManager.getTaskByid(2);
+        taskManager.getSubTaskByid(6);
+        taskManager.getTaskByid(2);
+        taskManager.getEpicByid(4);
 
-        Epic epic = taskManager.getEpicById(4);
+        Epic epic = taskManager.getEpicByid(4);
         System.out.println(epic);
-        System.out.println(epic.getSubtaskIds());
-        taskManager.getSubTaskById(6);
+        System.out.println(epic.getSubtaskids());
+        taskManager.getSubTaskByid(6);
 
         printAllTasks(taskManager);
 
@@ -50,7 +50,7 @@ public class Main {
         taskManager.updateSubTask(new SubTask(7, "Замена дверей",
                 "Установка новых дверей", StatusTask.IN_PROGRESS, 4));
 
-//        taskManager.getEpicById(3);
+//        taskManager.getEpicByid(3);
 
         printAllTasks(taskManager);
 
@@ -66,7 +66,7 @@ public class Main {
         for (Task epic : taskManager.getAllEpics()) {
             System.out.println(epic);
 
-            for (Task task : taskManager.getSubtasksByEpic(epic.getId())) {
+            for (Task task : taskManager.getSubtasksByEpic(epic.getid())) {
                 System.out.println("--> " + task);
             }
         }

@@ -3,44 +3,44 @@ package ru.tasktracker.model;
 import java.util.ArrayList;
 
 public class SubTask extends Task {
-    private final int epicId;
+    private final int epicid;
 
-    public SubTask(String taskName, String taskDescription, int epicId) {
+    public SubTask(String taskName, String taskDescription, int epicid) {
         super(-1, taskName, taskDescription, StatusTask.NEW);
-        this.epicId = epicId;
+        this.epicid = epicid;
     }
 
-    public SubTask(int id, String taskName, String taskDescription, StatusTask statusTask, int epicId) {
+    public SubTask(int id, String taskName, String taskDescription, StatusTask statusTask, int epicid) {
         super(id, taskName, taskDescription, statusTask);
-        this.epicId = epicId;
+        this.epicid = epicid;
     }
 
-    public int getEpicId() {
-        return epicId;
+    public int getEpicid() {
+        return epicid;
     }
 
-    public SubTask withId(int newId) {
-        return new SubTask(newId, getTaskName(), getTaskDescription(), getStatusTask(), epicId);
+    public SubTask withid(int newid) {
+        return new SubTask(newid, getTaskName(), getTaskDescription(), getStatusTask(), epicid);
     }
 
     public SubTask withName(String newName) {
-        return new SubTask(getId(), newName, getTaskDescription(), getStatusTask(), epicId);
+        return new SubTask(getid(), newName, getTaskDescription(), getStatusTask(), epicid);
     }
 
     public SubTask withDescription(String newDescription) {
-        return new SubTask(getId(), getTaskName(), newDescription, getStatusTask(), epicId);
+        return new SubTask(getid(), getTaskName(), newDescription, getStatusTask(), epicid);
     }
 
     public SubTask withStatus(StatusTask newStatus) {
-        return new SubTask(getId(), getTaskName(), getTaskDescription(), newStatus, epicId);
+        return new SubTask(getid(), getTaskName(), getTaskDescription(), newStatus, epicid);
     }
 
-    public SubTask withEpicId(int newEpicId) {
-        return new SubTask(getId(), getTaskName(), getTaskDescription(), getStatusTask(), newEpicId);
+    public SubTask withEpicid(int newEpicid) {
+        return new SubTask(getid(), getTaskName(), getTaskDescription(), getStatusTask(), newEpicid);
     }
 
     @Override
     public String toString() {
-        return super.toString() + " | EpicID: " + epicId;
+        return super.toString() + " | Epicid: " + epicid;
     }
 }

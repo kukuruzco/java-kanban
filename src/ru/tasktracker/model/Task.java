@@ -22,7 +22,7 @@ public class Task {
         this.statusTask = statusTask;
     }
 
-    public int getId() {
+    public int getid() {
         return id;
     }
 
@@ -61,7 +61,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "ID " + id + ": " + taskName + " | " + taskDescription + " (" + statusTask + ")";
+        return "id " + id + ": " + taskName + " | " + taskDescription + " (" + statusTask + ")";
     }
 
 }
