@@ -26,7 +26,7 @@ class InMemoryTaskManagerTest {
                 "TestTask",
                 "TaskDesc"
         ));
-        int taskid = task.getid();
+        int taskid = task.getId();
         assertTrue(taskid > 0, "Задача должна получить id");
 
         // 2. Добавляем Epic
@@ -34,20 +34,20 @@ class InMemoryTaskManagerTest {
                 "TestEpic",
                 "EpicDesc"
         ));
-        int epicid = epic.getid();
-        assertTrue(epicid > 0, "Эпик должен получить id");
-        assertNotEquals(taskid, epicid, "id должны быть разными");
+        int epicId = epic.getId();
+        assertTrue(epicId > 0, "Эпик должен получить id");
+        assertNotEquals(taskid, epicId, "id должны быть разными");
 
         // 3. Добавляем SubTask для эпика
         SubTask subTask = manager.addSubTask(new SubTask(
                 "TestSubtask",
                 "SubtaskDesc",
-                epicid
+                epicId
         ));
-        int subTaskid = subTask.getid();
-        assertTrue(subTaskid > 0, "Подзадача должна получить id");
-        assertNotEquals(taskid, subTaskid, "id должны быть разными");
-        assertNotEquals(epicid, subTaskid, "id должны быть разными");
+        int subtaskId = subTask.getId();
+        assertTrue(subtaskId > 0, "Подзадача должна получить id");
+        assertNotEquals(taskid, subtaskId, "id должны быть разными");
+        assertNotEquals(epicId, subtaskId, "id должны быть разными");
 
         // 4. Проверяем, что все задачи добавились
         assertEquals(1, manager.getAllTasks().size(), "1 обычная задача");
@@ -60,19 +60,19 @@ class InMemoryTaskManagerTest {
         assertEquals(task, foundTask, "Задачи должны совпадать");
         assertEquals("TestTask", foundTask.getTaskName());
 
-        Epic foundEpic = manager.getEpicByid(epicid);
+        Epic foundEpic = manager.getEpicByid(epicId);
         assertNotNull(foundEpic, "Должен найтись эпик");
         assertEquals(epic, foundEpic, "Эпики должны совпадать");
         assertEquals("TestEpic", foundEpic.getTaskName());
 
-        SubTask foundSubTask = manager.getSubTaskByid(subTaskid);
+        SubTask foundSubTask = manager.getSubTaskByid(subtaskId);
         assertNotNull(foundSubTask, "Должна найтись подзадача");
         assertEquals(subTask, foundSubTask, "Подзадачи должны совпадать");
         assertEquals("TestSubtask", foundSubTask.getTaskName());
-        assertEquals(epicid, foundSubTask.getEpicid(), "Подзадача должна ссылаться на эпик");
+        assertEquals(epicId, foundSubTask.getepicId(), "Подзадача должна ссылаться на эпик");
 
         // 6. Проверяем, что эпик знает о своей подзадаче
-        assertTrue(foundEpic.getSubtaskids().contains(subTaskid),
+        assertTrue(foundEpic.getsubtaskIds().contains(subtaskId),
                 "Эпик должен содержать id своей подзадачи");
     }
 
@@ -92,12 +92,12 @@ class InMemoryTaskManagerTest {
         // Создаем задачи разных типов
         Task task = manager.addTask(new Task("Task", "Desc"));
         Epic epic = manager.addEpic(new Epic("Epic", "Desc"));
-        SubTask subTask = manager.addSubTask(new SubTask("SubTask", "Desc", epic.getid()));
+        SubTask subTask = manager.addSubTask(new SubTask("SubTask", "Desc", epic.getId()));
 
         // Проверяем, что все id уникальны
-        assertNotEquals(task.getid(), epic.getid(), "Task и Epic должны иметь разные id");
-        assertNotEquals(task.getid(), subTask.getid(), "Task и SubTask должны иметь разные id");
-        assertNotEquals(epic.getid(), subTask.getid(), "Epic и SubTask должны иметь разные id");
+        assertNotEquals(task.getId(), epic.getId(), "Task и Epic должны иметь разные id");
+        assertNotEquals(task.getId(), subTask.getId(), "Task и SubTask должны иметь разные id");
+        assertNotEquals(epic.getId(), subTask.getId(), "Epic и SubTask должны иметь разные id");
 
     }
 
@@ -107,12 +107,12 @@ class InMemoryTaskManagerTest {
         // Создаем задачи разных типов
         Task task = manager.addTask(new Task("Task", "Desc"));
         Epic epic = manager.addEpic(new Epic("Epic", "Desc"));
-        SubTask subTask1 = manager.addSubTask(new SubTask("SubTask1", "Desc1", epic.getid()));
-        SubTask subTask2 = manager.addSubTask(new SubTask("SubTask2", "Desc2", epic.getid()));
-        int taskid = task.getid();
-        int epicid = epic.getid();
-        int subTask1id = subTask1.getid();
-        int subTask2id = subTask2.getid();
+        SubTask subTask1 = manager.addSubTask(new SubTask("SubTask1", "Desc1", epic.getId()));
+        SubTask subTask2 = manager.addSubTask(new SubTask("SubTask2", "Desc2", epic.getId()));
+        int taskid = task.getId();
+        int epicId = epic.getId();
+        int subTask1id = subTask1.getId();
+        int subTask2id = subTask2.getId();
 
         // Проверяем, что все задачи добавились
         assertEquals(1, manager.getAllTasks().size(), "1 обычная задача");

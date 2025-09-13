@@ -36,7 +36,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             return;
         }
 
-        int taskid = task.getid();
+        int taskid = task.getId();
 
         if (nodeMap.containsKey(taskid)) {
             removeNode(nodeMap.get(taskid));
@@ -89,7 +89,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             tail = node.prev;
         }
 
-        nodeMap.remove(node.task.getid());
+        nodeMap.remove(node.task.getId());
         size--;
     }
 
@@ -120,7 +120,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         nodeMap.clear();
     }
 
-    public boolean contains(int taskid) {
-        return nodeMap.containsKey(taskid);
+    public boolean contains(int taskId) {
+        return nodeMap.containsKey(taskId);
     }
 }

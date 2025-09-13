@@ -30,7 +30,7 @@ public class Main {
 
         Epic epic = taskManager.getEpicByid(4);
         System.out.println(epic);
-        System.out.println(epic.getSubtaskids());
+        System.out.println(epic.getsubtaskIds());
         taskManager.getSubTaskByid(6);
 
         printAllTasks(taskManager);
@@ -66,7 +66,7 @@ public class Main {
         for (Task epic : taskManager.getAllEpics()) {
             System.out.println(epic);
 
-            for (Task task : taskManager.getSubtasksByEpic(epic.getid())) {
+            for (Task task : taskManager.getSubtasksByEpic(epic.getId())) {
                 System.out.println("--> " + task);
             }
         }

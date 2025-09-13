@@ -4,9 +4,9 @@ import java.util.Objects;
 
 public class Task {
     private final int id;
-    private String taskName;
-    private String taskDescription;
-    private StatusTask statusTask;
+    private final String taskName;
+    private final String taskDescription;
+    private final StatusTask statusTask;
 
     public Task(String taskName, String taskDescription) {
         this.id = -1;
@@ -22,7 +22,7 @@ public class Task {
         this.statusTask = statusTask;
     }
 
-    public int getid() {
+    public int getId() {
         return id;
     }
 
@@ -37,14 +37,6 @@ public class Task {
     public StatusTask getStatusTask() {
         return statusTask;
     }
-
-//    public void setTaskName(String taskName) { this.taskName = taskName; }
-//
-//    public void setTaskDescription(String taskDescription) { this.taskDescription = taskDescription; }
-//
-//    public void setStatusTask(StatusTask statusTask) {
-//        this.statusTask = statusTask;
-//    }
 
     @Override
     public boolean equals(Object o) {

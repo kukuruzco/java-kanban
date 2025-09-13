@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Epic extends Task {
-    private ArrayList<Integer> subtaskids = new ArrayList<>();
+    private ArrayList<Integer> subtaskIds = new ArrayList<>();
 
     public Epic(String taskName, String taskDescription) {
         super(-1, taskName, taskDescription, StatusTask.NEW);
@@ -14,25 +14,25 @@ public class Epic extends Task {
         super(id, taskName, taskDescription, statusTask);
     }
 
-    public Epic(int id, String taskName, String taskDescription, StatusTask statusTask, ArrayList<Integer> subtaskids) {
+    public Epic(int id, String taskName, String taskDescription, StatusTask statusTask, ArrayList<Integer> subtaskIds) {
         super(id, taskName, taskDescription, statusTask);
-        this.subtaskids = new ArrayList<>(subtaskids);
+        this.subtaskIds = new ArrayList<>(subtaskIds);
     }
 
-    public ArrayList<Integer> getSubtaskids() {
-        return subtaskids;
+    public ArrayList<Integer> getsubtaskIds() {
+        return subtaskIds;
     }
 
     public Epic withName(String newName) {
-        return new Epic(getid(), newName, getTaskDescription(), getStatusTask());
+        return new Epic(getId(), newName, getTaskDescription(), getStatusTask());
     }
 
     public Epic withDescription(String newDescription) {
-        return new Epic(getid(), getTaskName(), newDescription, getStatusTask());
+        return new Epic(getId(), getTaskName(), newDescription, getStatusTask());
     }
 
     public Epic withStatus(StatusTask newStatus) {
-        return new Epic(getid(), getTaskName(), getTaskDescription(), newStatus);
+        return new Epic(getId(), getTaskName(), getTaskDescription(), newStatus);
     }
 
     public StatusTask updateStatus(ArrayList<SubTask> epicSubtasks) {
@@ -73,12 +73,12 @@ public class Epic extends Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Epic epic = (Epic) o;
-        return Objects.equals(getid(), epic.getid());
+        return Objects.equals(getId(), epic.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getid());
+        return Objects.hash(getId());
     }
 
 }

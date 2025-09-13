@@ -54,9 +54,9 @@ class HistoryManagerTest {
         assertEquals(StatusTask.IN_PROGRESS, firstVersion.getStatusTask());
 
         // Проверяем, что id одинаковые (это одна и та же задача)
-        assertEquals(originalTask.getid(), updatedTask.getid());
-        assertEquals(originalTask.getid(), firstVersion.getid());
-        assertEquals(originalTask.getid(), lastVersion.getid());
+        assertEquals(originalTask.getId(), updatedTask.getId());
+        assertEquals(originalTask.getId(), firstVersion.getId());
+        assertEquals(originalTask.getId(), lastVersion.getId());
 
         // Создаем новую задачу
         Task newTask = new Task(2, "New Task", "New description", StatusTask.NEW);
@@ -74,14 +74,14 @@ class HistoryManagerTest {
 
         // Проверяем, что теперь на первой позиции в списке задача с id 2
         Task firstPos = updatedHistory.getFirst();
-        assertEquals(2, firstPos.getid());
+        assertEquals(2, firstPos.getId());
         assertEquals("New Task", firstPos.getTaskName());
         assertEquals("New description", firstPos.getTaskDescription());
         assertEquals(StatusTask.NEW, firstPos.getStatusTask());
 
         // Проверяем, что последнюю позицию в списке задач теперь занимает обновленная версия с id 1
         Task secondPos = updatedHistory.getLast();
-        assertEquals(1, secondPos.getid());
+        assertEquals(1, secondPos.getId());
         assertEquals("Updated first Task", secondPos.getTaskName());
         assertEquals("Updated first description", secondPos.getTaskDescription());
         assertEquals(StatusTask.DONE, secondPos.getStatusTask());

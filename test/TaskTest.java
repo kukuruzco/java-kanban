@@ -23,7 +23,7 @@ class TaskTest {
                 "Test addNewTask description"
         ));
 
-        int taskid = task.getid();
+        int taskid = task.getId();
 
         final Task savedTask = manager.getTaskByid(taskid);
 
@@ -64,7 +64,7 @@ class TaskTest {
         // Создаем и добавляем задачу
         Task originalTask = new Task("Original", "Description");
         Task addedTask = manager.addTask(originalTask);
-        int taskid = addedTask.getid();
+        int taskid = addedTask.getId();
 
         // Получаем задачу из менеджера
         Task taskFromManager = manager.getTaskByid(taskid);

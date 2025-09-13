@@ -16,25 +16,25 @@ class SubTaskTest {
                 "Test Description"
         ));
 
-        int epicid = epic.getid();
+        int epicId = epic.getId();
 
         SubTask subtask = manager.addSubTask(new SubTask(
                 "Test Subtask",
                 "Test Subtask Desc",
-                epicid
+                epicId
         ));
 
-        int subtaskid = subtask.getid();
+        int subtaskId = subtask.getId();
 
         // Подзадача ссылается на правильный эпик
-        assertEquals(epicid, subtask.getEpicid());
+        assertEquals(epicId, subtask.getepicId());
 
         // Эпик должен содержать id подзадачи в своем списке
-        Epic updatedEpic = manager.getEpicByid(epicid);
-        assertTrue(updatedEpic.getSubtaskids().contains(subtaskid));
+        Epic updatedEpic = manager.getEpicByid(epicId);
+        assertTrue(updatedEpic.getsubtaskIds().contains(subtaskId));
 
         // Количество подзадач у эпика должно увеличиться
-        assertEquals(1, updatedEpic.getSubtaskids().size());
+        assertEquals(1, updatedEpic.getsubtaskIds().size());
     }
 
     @Test
@@ -46,36 +46,36 @@ class SubTaskTest {
                 "Test Epic for Removal",
                 "Test Description for Removal"
         ));
-        int epicid = epic.getid();
+        int epicId = epic.getId();
 
         // Создаем подзадачу
         SubTask subtask = manager.addSubTask(new SubTask(
                 "Test Subtask to Remove",
                 "Test Subtask Desc to Remove",
-                epicid
+                epicId
         ));
-        int subtaskid = subtask.getid();
+        int subtaskId = subtask.getId();
 
         // Проверяем, что подзадача была добавлена
-        Epic epicBeforeRemoval = manager.getEpicByid(epicid);
-        assertTrue(epicBeforeRemoval.getSubtaskids().contains(subtaskid));
-        assertEquals(1, epicBeforeRemoval.getSubtaskids().size());
+        Epic epicBeforeRemoval = manager.getEpicByid(epicId);
+        assertTrue(epicBeforeRemoval.getsubtaskIds().contains(subtaskId));
+        assertEquals(1, epicBeforeRemoval.getsubtaskIds().size());
 
         // Удаляем подзадачу
-        manager.deleteSubTaskByid(subtaskid);
+        manager.deleteSubTaskByid(subtaskId);
 
         // Проверяем, что подзадача действительно удалена из менеджера
-        assertNull(manager.getSubTaskByid(subtaskid), "Подзадача должна быть удалена из менеджера");
+        assertNull(manager.getSubTaskByid(subtaskId), "Подзадача должна быть удалена из менеджера");
 
         // Проверяем, что эпик больше не содержит id удаленной подзадачи
-        Epic epicAfterRemoval = manager.getEpicByid(epicid);
-        assertFalse(epicAfterRemoval.getSubtaskids().contains(subtaskid),
+        Epic epicAfterRemoval = manager.getEpicByid(epicId);
+        assertFalse(epicAfterRemoval.getsubtaskIds().contains(subtaskId),
                 "Эпик не должен содержать id удаленной подзадачи");
-        assertEquals(0, epicAfterRemoval.getSubtaskids().size(),
+        assertEquals(0, epicAfterRemoval.getsubtaskIds().size(),
                 "Список подзадач эпика должен быть пустым");
 
         // Пытаемся получить удаленную подзадачу
-        SubTask removedSubtask = manager.getSubTaskByid(subtaskid);
+        SubTask removedSubtask = manager.getSubTaskByid(subtaskId);
         assertNull(removedSubtask, "Удаленная подзадача не должна быть доступна через менеджер");
 
     }

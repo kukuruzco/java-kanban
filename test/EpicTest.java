@@ -28,9 +28,9 @@ class EpicTest {
                 "Test addNewEpic description"
         ));
 
-        int epicid = epic.getid();
+        int epicId = epic.getId();
 
-        final Task savedEpic = manager.getEpicByid(epicid);
+        final Task savedEpic = manager.getEpicByid(epicId);
 
         assertNotNull(savedEpic, "Эпик не найден.");
         assertEquals(epic, savedEpic, "Эпики не совпадают.");
@@ -55,7 +55,7 @@ class EpicTest {
 
         assertEquals(2, manager.getAllEpics().size(), "Неверное количество эпиков.");
 
-        int epic1id = epic1.getid();
+        int epic1id = epic1.getId();
         manager.deleteEpicByid(epic1id);
         assertNull(manager.getEpicByid(epic1id), "Такой эпик существует");
         assertEquals(1, manager.getAllEpics().size(), "Неверное количество эпиков.");
@@ -87,41 +87,41 @@ class EpicTest {
                 "Test Epic",
                 "Test Description"
         ));
-        int epicid = epic.getid();
+        int epicId = epic.getId();
 
         // Получаем актуальную версию эпика
-        Epic currentEpic = manager.getEpicByid(epicid);
+        Epic currentEpic = manager.getEpicByid(epicId);
         SubTask subtask = manager.addSubTask(new SubTask(
                 "Normal subtask",
                 "Desc",
-                epicid
+                epicId
         ));
 
         // Получаем актуальную версию после добавления подзадачи
-        currentEpic = manager.getEpicByid(epicid);
+        currentEpic = manager.getEpicByid(epicId);
 
         // Сохраняем содержимое списка
-        List<Integer> originalSubtaskList = new ArrayList<>(currentEpic.getSubtaskids());
+        List<Integer> originalSubtaskList = new ArrayList<>(currentEpic.getsubtaskIds());
         int originalSubtaskCount = originalSubtaskList.size();
 
         // Пытаемся обновить подзадачу с некорректными данными
         SubTask badSubTask = new SubTask(
-                epicid, // id подзадачи равен id эпика - это ошибка
+                epicId, // id подзадачи равен id эпика - это ошибка
                 "Bad subtask",
                 "Bad desc",
                 StatusTask.NEW,
-                epicid
+                epicId
         );
         manager.updateSubTask(badSubTask);
 
         // Получаем актуальную версию эпика после попытки обновления
-        Epic epicAfterAttempt = manager.getEpicByid(epicid);
-        List<Integer> subtaskidsAfter = epicAfterAttempt.getSubtaskids();
+        Epic epicAfterAttempt = manager.getEpicByid(epicId);
+        List<Integer> subtaskIdsAfter = epicAfterAttempt.getsubtaskIds();
 
         // Проверяем, что список подзадач не изменился
-        assertEquals(originalSubtaskCount, subtaskidsAfter.size(),
+        assertEquals(originalSubtaskCount, subtaskIdsAfter.size(),
                 "Количество подзадач не должно измениться");
-        assertEquals(originalSubtaskList, subtaskidsAfter,
+        assertEquals(originalSubtaskList, subtaskIdsAfter,
                 "Содержимое списка подзадач не должно измениться");
     }
 
@@ -133,116 +133,116 @@ class EpicTest {
                 "Test addNewEpic description"
         ));
 
-        int epicid = epic.getid();
+        int epicId = epic.getId();
 
-        Epic currentEpic = manager.getEpicByid(epicid);
-        List<Integer> subTasksidsWoTasks = currentEpic.getSubtaskids();
+        Epic currentEpic = manager.getEpicByid(epicId);
+        List<Integer> subTasksidsWoTasks = currentEpic.getsubtaskIds();
         assertEquals(0, subTasksidsWoTasks.size());
 
         SubTask subtask1 = manager.addSubTask(new SubTask(
                 "Test1 addNewSubtask",
                 "Test addNewSubtask description",
-                epicid
+                epicId
         ));
 
         SubTask subtask2 = manager.addSubTask(new SubTask(
                 "Test2 addNewSubtask",
                 "Test addNewSubtask description",
-                epicid
+                epicId
         ));
 
         // Получаем актуальную версию эпика
-        currentEpic = manager.getEpicByid(epicid);
-        List<Integer> subTasksidsWith2Tasks = currentEpic.getSubtaskids();
+        currentEpic = manager.getEpicByid(epicId);
+        List<Integer> subTasksidsWith2Tasks = currentEpic.getsubtaskIds();
         assertEquals(2, subTasksidsWith2Tasks.size());
 
         // Проверяем статус эпика после добавления двух задач
         assertEquals(currentEpic.getStatusTask(), StatusTask.NEW);
 
         // Изменяем статус одной из задач на DONE
-        int subtask2id = subtask2.getid();
+        int subtask2id = subtask2.getId();
         manager.updateSubTask(new SubTask(
                 subtask2id,
                 "Test2 addNewSubtask",
                 "Test addNewSubtask description",
                 StatusTask.DONE,
-                epicid
+                epicId
         ));
 
         // Получаем актуальную версию эпика и проверяем статус
-        currentEpic = manager.getEpicByid(epicid);
+        currentEpic = manager.getEpicByid(epicId);
         assertEquals(currentEpic.getStatusTask(), StatusTask.IN_PROGRESS, "Статус эпика не IN_PROGRESS");
 
         // Изменяем статус второй задачи на DONE
-        int subtask1id = subtask1.getid();
+        int subtask1id = subtask1.getId();
         manager.updateSubTask(new SubTask(
                 subtask1id,
                 "Test1 addNewSubtask",
                 "Test addNewSubtask description",
                 StatusTask.DONE,
-                epicid
+                epicId
         ));
 
         // Получаем актуальную версию эпика и проверяем статус
-        currentEpic = manager.getEpicByid(epicid);
+        currentEpic = manager.getEpicByid(epicId);
         assertEquals(currentEpic.getStatusTask(), StatusTask.DONE, "Статус эпика не DONE");
 
         // Добавляем новую задачу
         SubTask subtask3 = manager.addSubTask(new SubTask(
                 "Test3 addNewSubtask",
                 "Test addNewSubtask description",
-                epicid
+                epicId
         ));
 
         // Получаем актуальную версию эпика
-        currentEpic = manager.getEpicByid(epicid);
-        assertEquals(3, currentEpic.getSubtaskids().size(), "Неверное количество подзадач.");
+        currentEpic = manager.getEpicByid(epicId);
+        assertEquals(3, currentEpic.getsubtaskIds().size(), "Неверное количество подзадач.");
         assertEquals(currentEpic.getStatusTask(), StatusTask.IN_PROGRESS, "Статус эпика не IN_PROGRESS");
 
         // Удаляем все подзадачи
         manager.deleteAllSubTasks();
 
         // Получаем актуальную версию эпика
-        currentEpic = manager.getEpicByid(epicid);
-        assertEquals(0, currentEpic.getSubtaskids().size(), "Неверное количество подзадач.");
+        currentEpic = manager.getEpicByid(epicId);
+        assertEquals(0, currentEpic.getsubtaskIds().size(), "Неверное количество подзадач.");
         assertEquals(currentEpic.getStatusTask(), StatusTask.NEW, "Статус эпика не NEW");
     }
 
     @Test
     @DisplayName("Внутри эпиков не должно оставаться неактуальных id подзадач после удаления")
-    void testEpicShouldNotContainStaleSubtaskidsAfterDeletion() {
+    void testEpicShouldNotContainStalesubtaskIdsAfterDeletion() {
         Epic epic = manager.addEpic(new Epic(
                 "Test Epic for Stale ids",
                 "Test Description"
         ));
-        int epicid = epic.getid();
+        int epicId = epic.getId();
 
         // Создаем несколько подзадач
         SubTask subtask1 = manager.addSubTask(new SubTask(
                 "Subtask 1",
                 "Description 1",
-                epicid
+                epicId
         ));
         SubTask subtask2 = manager.addSubTask(new SubTask(
                 "Subtask 2",
                 "Description 2",
-                epicid
+                epicId
         ));
         SubTask subtask3 = manager.addSubTask(new SubTask(
                 "Subtask 3",
                 "Description 3",
-                epicid
+                epicId
         ));
 
-        int subtask1id = subtask1.getid();
-        int subtask2id = subtask2.getid();
-        int subtask3id = subtask3.getid();
+        int subtask1id = subtask1.getId();
+        int subtask2id = subtask2.getId();
+        int subtask3id = subtask3.getId();
 
         // Получаем актуальную версию эпика
-        Epic currentEpic = manager.getEpicByid(epicid);
-        List<Integer> subtaskidsBefore = currentEpic.getSubtaskids();
-        assertEquals(3, subtaskidsBefore.size(), "Должно быть 3 подзадачи в эпике");
-        assertTrue(subtaskidsBefore.containsAll(List.of(subtask1id, subtask2id, subtask3id)));
+        Epic currentEpic = manager.getEpicByid(epicId);
+        List<Integer> subtaskIdsBefore = currentEpic.getsubtaskIds();
+        assertEquals(3, subtaskIdsBefore.size(), "Должно быть 3 подзадачи в эпике");
+        assertTrue(subtaskIdsBefore.containsAll(List.of(subtask1id, subtask2id, subtask3id)));
 
         // Удаляем одну подзадачу
         manager.deleteSubTaskByid(subtask2id);
@@ -251,46 +251,46 @@ class EpicTest {
         assertNull(manager.getSubTaskByid(subtask2id), "Подзадача должна быть удалена из менеджера");
 
         // Получаем актуальную версию эпика после удаления
-        currentEpic = manager.getEpicByid(epicid);
-        List<Integer> subtaskidsAfterFirst = currentEpic.getSubtaskids();
+        currentEpic = manager.getEpicByid(epicId);
+        List<Integer> subtaskIdsAfterFirst = currentEpic.getsubtaskIds();
 
-        assertFalse(subtaskidsAfterFirst.contains(subtask2id),
+        assertFalse(subtaskIdsAfterFirst.contains(subtask2id),
                 "Эпик не должен содержать id удаленной подзадачи " + subtask2id);
-        assertEquals(2, subtaskidsAfterFirst.size(),
+        assertEquals(2, subtaskIdsAfterFirst.size(),
                 "В эпике должно остаться 2 подзадачи после удаления одной");
-        assertTrue(subtaskidsAfterFirst.containsAll(List.of(subtask1id, subtask3id)),
+        assertTrue(subtaskIdsAfterFirst.containsAll(List.of(subtask1id, subtask3id)),
                 "Эпик должен содержать только актуальные id подзадач");
 
         // Удаляем еще одну подзадачу
         manager.deleteSubTaskByid(subtask1id);
 
         // Получаем актуальную версию эпика
-        currentEpic = manager.getEpicByid(epicid);
-        List<Integer> subtaskidsAfterSecond = currentEpic.getSubtaskids();
+        currentEpic = manager.getEpicByid(epicId);
+        List<Integer> subtaskIdsAfterSecond = currentEpic.getsubtaskIds();
 
-        assertFalse(subtaskidsAfterSecond.contains(subtask1id),
+        assertFalse(subtaskIdsAfterSecond.contains(subtask1id),
                 "Эпик не должен содержать id удаленной подзадачи " + subtask1id);
-        assertFalse(subtaskidsAfterSecond.contains(subtask2id),
+        assertFalse(subtaskIdsAfterSecond.contains(subtask2id),
                 "Эпик не должен содержать id удаленной подзадачи " + subtask2id);
-        assertEquals(1, subtaskidsAfterSecond.size(),
+        assertEquals(1, subtaskIdsAfterSecond.size(),
                 "В эпике должна остаться 1 подзадача после удаления двух");
-        assertTrue(subtaskidsAfterSecond.contains(subtask3id),
+        assertTrue(subtaskIdsAfterSecond.contains(subtask3id),
                 "Эпик должен содержать только актуальные id подзадач");
 
         // Удаляем последнюю подзадачу
         manager.deleteSubTaskByid(subtask3id);
 
         // Получаем актуальную версию эпика
-        currentEpic = manager.getEpicByid(epicid);
-        List<Integer> subtaskidsAfterAll = currentEpic.getSubtaskids();
+        currentEpic = manager.getEpicByid(epicId);
+        List<Integer> subtaskIdsAfterAll = currentEpic.getsubtaskIds();
 
-        assertEquals(0, subtaskidsAfterAll.size(),
+        assertEquals(0, subtaskIdsAfterAll.size(),
                 "Эпик должен быть пустым после удаления всех подзадач");
-        assertFalse(subtaskidsAfterAll.contains(subtask1id),
+        assertFalse(subtaskIdsAfterAll.contains(subtask1id),
                 "Эпик не должен содержать старые id подзадач");
-        assertFalse(subtaskidsAfterAll.contains(subtask2id),
+        assertFalse(subtaskIdsAfterAll.contains(subtask2id),
                 "Эпик не должен содержать старые id подзадач");
-        assertFalse(subtaskidsAfterAll.contains(subtask3id),
+        assertFalse(subtaskIdsAfterAll.contains(subtask3id),
                 "Эпик не должен содержать старые id подзадач");
     }
 }

@@ -32,17 +32,17 @@ public interface TaskManager {
 
     void updateEpic(Epic updatedEpic);
 
-    void deleteEpicByid(int epicid);
+    void deleteEpicByid(int epicId);
 
     SubTask addSubTask(SubTask subtask);
 
     ArrayList<SubTask> getAllSubTasks();
 
-    List<SubTask> getSubtasksByEpic(int epicid);
+    List<SubTask> getSubtasksByEpic(int epicId);
 
     SubTask getSubTaskByid(int id);
 
-    void deleteSubTaskByid(int subTaskid);
+    void deleteSubTaskByid(int subtaskId);
 
     void deleteAllSubTasks();
 
