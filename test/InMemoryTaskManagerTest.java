@@ -55,21 +55,21 @@ class InMemoryTaskManagerTest {
         assertEquals(1, manager.getAllSubTasks().size(), "1 подзадача");
 
         // 5. Проверяем поиск по id
-        Task foundTask = manager.getTaskByid(taskid);
+        Task foundTask = manager.getTaskById(taskid);
         assertNotNull(foundTask, "Должна найтись обычная задача");
         assertEquals(task, foundTask, "Задачи должны совпадать");
         assertEquals("TestTask", foundTask.getTaskName());
 
-        Epic foundEpic = manager.getEpicByid(epicId);
+        Epic foundEpic = manager.getEpicById(epicId);
         assertNotNull(foundEpic, "Должен найтись эпик");
         assertEquals(epic, foundEpic, "Эпики должны совпадать");
         assertEquals("TestEpic", foundEpic.getTaskName());
 
-        SubTask foundSubTask = manager.getSubTaskByid(subtaskId);
+        SubTask foundSubTask = manager.getSubTaskById(subtaskId);
         assertNotNull(foundSubTask, "Должна найтись подзадача");
         assertEquals(subTask, foundSubTask, "Подзадачи должны совпадать");
         assertEquals("TestSubtask", foundSubTask.getTaskName());
-        assertEquals(epicId, foundSubTask.getepicId(), "Подзадача должна ссылаться на эпик");
+        assertEquals(epicId, foundSubTask.getEpicId(), "Подзадача должна ссылаться на эпик");
 
         // 6. Проверяем, что эпик знает о своей подзадаче
         assertTrue(foundEpic.getsubtaskIds().contains(subtaskId),
@@ -80,9 +80,9 @@ class InMemoryTaskManagerTest {
     @DisplayName("Поиск несуществующих задач должен возвращать null или бросать исключение")
     void findNonExistentTasks() {
         // Пытаемся найти задачи с несуществующими id
-        assertNull(manager.getTaskByid(999), "Несуществующая задача должна возвращать null");
-        assertNull(manager.getEpicByid(999), "Несуществующий эпик должен возвращать null");
-        assertNull(manager.getSubTaskByid(999), "Несуществующая подзадача должна возвращать null");
+        assertNull(manager.getTaskById(999), "Несуществующая задача должна возвращать null");
+        assertNull(manager.getEpicById(999), "Несуществующий эпик должен возвращать null");
+        assertNull(manager.getSubTaskById(999), "Несуществующая подзадача должна возвращать null");
 
     }
 
@@ -120,8 +120,8 @@ class InMemoryTaskManagerTest {
         assertEquals(2, manager.getAllSubTasks().size(), "2 подзадачи");
 
         // Удаляем задачу и одну подзадачу
-        manager.deleteTaskByid(taskid);
-        manager.deleteSubTaskByid(subTask1id);
+        manager.deleteTaskById(taskid);
+        manager.deleteSubTaskById(subTask1id);
         assertEquals(0, manager.getAllTasks().size(), "обычных задач нет");
         assertEquals(1, manager.getAllEpics().size(), "1 эпик");
         assertEquals(1, manager.getAllSubTasks().size(), "1 подзадача");

@@ -1,7 +1,6 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.tasktracker.model.StatusTask;
 import ru.tasktracker.model.Task;
 import ru.tasktracker.service.TaskManager;
 import ru.tasktracker.util.Managers;
@@ -25,7 +24,7 @@ class TaskTest {
 
         int taskid = task.getId();
 
-        final Task savedTask = manager.getTaskByid(taskid);
+        final Task savedTask = manager.getTaskById(taskid);
 
         System.out.println(savedTask);
         assertNotNull(savedTask, "Задача не найдена.");
@@ -67,7 +66,7 @@ class TaskTest {
         int taskid = addedTask.getId();
 
         // Получаем задачу из менеджера
-        Task taskFromManager = manager.getTaskByid(taskid);
+        Task taskFromManager = manager.getTaskById(taskid);
 
         // Меняем задачу через сеттер (ОПАСНО!)
 //        taskFromManager.setTaskName("Modified Title");

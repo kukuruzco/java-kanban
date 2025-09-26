@@ -22,16 +22,16 @@ public class Main {
         taskManager.addSubTask(new SubTask("Демонтаж стен", "Снести перегородку", 4));
         taskManager.addSubTask(new SubTask("Замена дверей", "Монтаж дверных проемов", 4));
 
-        taskManager.getTaskByid(1);
-        taskManager.getTaskByid(2);
-        taskManager.getSubTaskByid(6);
-        taskManager.getTaskByid(2);
-        taskManager.getEpicByid(4);
+        taskManager.getTaskById(1);
+        taskManager.getTaskById(2);
+        taskManager.getSubTaskById(6);
+        taskManager.getTaskById(2);
+        taskManager.getEpicById(4);
 
-        Epic epic = taskManager.getEpicByid(4);
+        Epic epic = taskManager.getEpicById(4);
         System.out.println(epic);
         System.out.println(epic.getsubtaskIds());
-        taskManager.getSubTaskByid(6);
+        taskManager.getSubTaskById(6);
 
         printAllTasks(taskManager);
 
@@ -50,7 +50,7 @@ public class Main {
         taskManager.updateSubTask(new SubTask(7, "Замена дверей",
                 "Установка новых дверей", StatusTask.IN_PROGRESS, 4));
 
-//        taskManager.getEpicByid(3);
+//        taskManager.getEpicById(3);
 
         printAllTasks(taskManager);
 
