@@ -24,6 +24,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected void setLastId(int id) {
         this.lastid = id;
     }
+
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
