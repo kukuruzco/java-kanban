@@ -206,6 +206,7 @@ class FileBackedTaskManagerTest {
         assertEquals(1, loadedManager.getAllEpics().size(), "Должен быть 1 эпик");
         assertEquals(1, loadedManager.getAllSubTasks().size(), "Должна быть 1 подзадача");
     }
+
     @Test
     @DisplayName("Удаление задачи")
     void testDeleteTask() throws IOException {
