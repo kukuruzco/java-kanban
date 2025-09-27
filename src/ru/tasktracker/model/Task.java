@@ -24,6 +24,7 @@ public class Task {
         this.taskDescription = taskDescription;
         this.statusTask = statusTask;
     }
+
     public Task(TypeTask type, String taskName, String taskDescription, StatusTask statusTask) {
         this.type = type;
         this.id = -1;
@@ -48,7 +49,10 @@ public class Task {
         this.statusTask = statusTask;
     }
 
-    public TypeTask getType() { return type; }
+    public TypeTask getType() {
+        return type;
+    }
+
     public int getId() {
         return id;
     }
