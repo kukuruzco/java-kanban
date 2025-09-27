@@ -7,8 +7,10 @@ public class Task {
     private final String taskName;
     private final String taskDescription;
     private final StatusTask statusTask;
+    private final TypeTask type;
 
     public Task(String taskName, String taskDescription) {
+        this.type = TypeTask.TASK;
         this.id = -1;
         this.taskName = taskName;
         this.taskDescription = taskDescription;
@@ -16,12 +18,37 @@ public class Task {
     }
 
     public Task(int id, String taskName, String taskDescription, StatusTask statusTask) {
+        this.type = TypeTask.TASK;
+        this.id = id;
+        this.taskName = taskName;
+        this.taskDescription = taskDescription;
+        this.statusTask = statusTask;
+    }
+    public Task(TypeTask type, String taskName, String taskDescription, StatusTask statusTask) {
+        this.type = type;
+        this.id = -1;
+        this.taskName = taskName;
+        this.taskDescription = taskDescription;
+        this.statusTask = statusTask;
+    }
+
+    public Task(TypeTask type, String taskName, String taskDescription) {
+        this.type = type;
+        this.id = -1;
+        this.taskName = taskName;
+        this.taskDescription = taskDescription;
+        this.statusTask = StatusTask.NEW;
+    }
+
+    public Task(TypeTask type, int id, String taskName, String taskDescription, StatusTask statusTask) {
+        this.type = type;
         this.id = id;
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.statusTask = statusTask;
     }
 
+    public TypeTask getType() { return type; }
     public int getId() {
         return id;
     }

@@ -1,41 +1,30 @@
 package ru.tasktracker.model;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
-    private ArrayList<Integer> subtaskIds = new ArrayList<>();
+    private List<Integer> subTaskIds = new ArrayList<>();
 
     public Epic(String taskName, String taskDescription) {
-        super(-1, taskName, taskDescription, StatusTask.NEW);
+        super(TypeTask.EPIC, taskName, taskDescription, StatusTask.NEW);
     }
 
     public Epic(int id, String taskName, String taskDescription, StatusTask statusTask) {
-        super(id, taskName, taskDescription, statusTask);
+        super(TypeTask.EPIC, id, taskName, taskDescription, statusTask);
     }
 
-    public Epic(int id, String taskName, String taskDescription, StatusTask statusTask, ArrayList<Integer> subtaskIds) {
-        super(id, taskName, taskDescription, statusTask);
-        this.subtaskIds = new ArrayList<>(subtaskIds);
+    public Epic(int id, String taskName, String taskDescription, StatusTask statusTask, List<Integer> subTaskIds) {
+        super(TypeTask.EPIC, id, taskName, taskDescription, statusTask);
+        this.subTaskIds = new ArrayList<>(subTaskIds);
     }
 
-    public ArrayList<Integer> getsubtaskIds() {
-        return subtaskIds;
+    public List<Integer> getSubTaskIds() {
+        return subTaskIds;
     }
 
-    public Epic withName(String newName) {
-        return new Epic(getId(), newName, getTaskDescription(), getStatusTask());
-    }
-
-    public Epic withDescription(String newDescription) {
-        return new Epic(getId(), getTaskName(), newDescription, getStatusTask());
-    }
-
-    public Epic withStatus(StatusTask newStatus) {
-        return new Epic(getId(), getTaskName(), getTaskDescription(), newStatus);
-    }
-
-    public StatusTask updateStatus(ArrayList<SubTask> epicSubtasks) {
+    public StatusTask updateStatus(List<SubTask> epicSubtasks) {
         if (epicSubtasks.isEmpty()) {
             return StatusTask.NEW;  // Нет подзадач -> статус NEW
         }

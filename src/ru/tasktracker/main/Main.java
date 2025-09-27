@@ -1,9 +1,6 @@
 package ru.tasktracker.main;
 
-import ru.tasktracker.model.Epic;
-import ru.tasktracker.model.StatusTask;
-import ru.tasktracker.model.SubTask;
-import ru.tasktracker.model.Task;
+import ru.tasktracker.model.*;
 import ru.tasktracker.service.TaskManager;
 import ru.tasktracker.util.Managers;
 
@@ -30,7 +27,7 @@ public class Main {
 
         Epic epic = taskManager.getEpicById(4);
         System.out.println(epic);
-        System.out.println(epic.getsubtaskIds());
+        System.out.println(epic.getSubTaskIds());
         taskManager.getSubTaskById(6);
 
         printAllTasks(taskManager);

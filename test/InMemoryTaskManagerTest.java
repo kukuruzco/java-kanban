@@ -72,7 +72,7 @@ class InMemoryTaskManagerTest {
         assertEquals(epicId, foundSubTask.getEpicId(), "Подзадача должна ссылаться на эпик");
 
         // 6. Проверяем, что эпик знает о своей подзадаче
-        assertTrue(foundEpic.getsubtaskIds().contains(subtaskId),
+        assertTrue(foundEpic.getSubTaskIds().contains(subtaskId),
                 "Эпик должен содержать id своей подзадачи");
     }
 

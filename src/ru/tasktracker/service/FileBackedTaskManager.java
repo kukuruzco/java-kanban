@@ -1,8 +1,17 @@
 package ru.tasktracker.service;
 
-import ru.tasktracker.model.*;
+import ru.tasktracker.model.SubTask;
+import ru.tasktracker.model.Epic;
+import ru.tasktracker.model.Task;
+import ru.tasktracker.model.TypeTask;
+import ru.tasktracker.model.StatusTask;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -92,7 +101,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     private String toCsvString(Task task) {
-        if (task instanceof SubTask) {
+        if (task.getType() == TypeTask.SUBTASK) {
             SubTask subTask = (SubTask) task;
             return String.format("%d,%s,%s,%s,%s,%d",
                     subTask.getId(),
@@ -101,7 +110,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                     subTask.getStatusTask(),
                     subTask.getTaskDescription(),
                     subTask.getEpicId());
-        } else if (task instanceof Epic) {
+        } else if (task.getType() == TypeTask.EPIC) {
             Epic epic = (Epic) task;
             return String.format("%d,%s,%s,%s,%s,",
                     epic.getId(),
@@ -188,9 +197,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                         maxId = task.getId();
                     }
 
-                    if (task instanceof SubTask) {
+                    if (task.getType() == TypeTask.SUBTASK) {
                         manager.subtasks.put(task.getId(), (SubTask) task);
-                    } else if (task instanceof Epic) {
+                    } else if (task.getType() == TypeTask.EPIC) {
                         manager.epics.put(task.getId(), (Epic) task);
                     } else {
                         manager.tasks.put(task.getId(), task);
