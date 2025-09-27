@@ -80,6 +80,7 @@ class EpicTest {
 
         assertEquals(0, epicsAfterDel.size(), "Неверное количество эпиков.");
     }
+
     @Test
     @DisplayName("Проверка невозможности добавить эпик в качестве подзадачи")
     public void testEpicCannotAddItselfAsSubtask() {

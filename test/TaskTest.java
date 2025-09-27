@@ -11,10 +11,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TaskTest {
     private TaskManager manager;
+
     @BeforeEach
     void setUp() {
         manager = Managers.getDefault();
     }
+
     @Test
     void addNewTask() {
         Task task = manager.addTask(new Task(
