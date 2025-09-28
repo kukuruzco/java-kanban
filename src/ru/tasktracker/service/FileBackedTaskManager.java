@@ -16,6 +16,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
     private final Path filePath;
@@ -101,30 +106,33 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     private String toCsvString(Task task) {
-        if (task.getType() == TypeTask.SUBTASK) {
-            SubTask subTask = (SubTask) task;
-            return String.format("%d,%s,%s,%s,%s,%d",
-                    subTask.getId(),
-                    TypeTask.SUBTASK,
-                    subTask.getTaskName(),
-                    subTask.getStatusTask(),
-                    subTask.getTaskDescription(),
-                    subTask.getEpicId());
-        } else if (task.getType() == TypeTask.EPIC) {
-            Epic epic = (Epic) task;
-            return String.format("%d,%s,%s,%s,%s,",
-                    epic.getId(),
-                    TypeTask.EPIC,
-                    epic.getTaskName(),
-                    epic.getStatusTask(),
-                    epic.getTaskDescription());
-        } else {
-            return String.format("%d,%s,%s,%s,%s,",
-                    task.getId(),
-                    TypeTask.TASK,
-                    task.getTaskName(),
-                    task.getStatusTask(),
-                    task.getTaskDescription());
+        switch (task.getType()) {
+            case SUBTASK:
+                SubTask subTask = (SubTask) task;
+                return String.format("%d,%s,%s,%s,%s,%d",
+                        subTask.getId(),
+                        TypeTask.SUBTASK,
+                        subTask.getTaskName(),
+                        subTask.getStatusTask(),
+                        subTask.getTaskDescription(),
+                        subTask.getEpicId());
+            case EPIC:
+                Epic epic = (Epic) task;
+                return String.format("%d,%s,%s,%s,%s,",
+                        epic.getId(),
+                        TypeTask.EPIC,
+                        epic.getTaskName(),
+                        epic.getStatusTask(),
+                        epic.getTaskDescription());
+            case TASK:
+                return String.format("%d,%s,%s,%s,%s,",
+                        task.getId(),
+                        TypeTask.TASK,
+                        task.getTaskName(),
+                        task.getStatusTask(),
+                        task.getTaskDescription());
+            default:
+                return null;
         }
     }
 
@@ -205,6 +213,33 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                         manager.tasks.put(task.getId(), task);
                     }
                 }
+            }
+
+            Map<Integer, List<Integer>> epicSubTasks = new HashMap<>();
+            for (SubTask subTask : manager.subtasks.values()) {
+                int epicId = subTask.getEpicId();
+
+                List<Integer> subTaskList = epicSubTasks.get(epicId);
+                if (subTaskList == null) {
+                    subTaskList = new ArrayList<>();
+                    epicSubTasks.put(epicId, subTaskList);
+                }
+
+                subTaskList.add(subTask.getId());
+            }
+
+            for (Map.Entry<Integer, List<Integer>> entry : epicSubTasks.entrySet()) {
+                Epic epic = manager.epics.get(entry.getKey());
+                if (epic != null) {
+                    Epic updatedEpic = new Epic(epic.getId(), epic.getTaskName(),
+                            epic.getTaskDescription(), epic.getStatusTask());
+                    updatedEpic.getSubTaskIds().addAll(entry.getValue());
+                    manager.epics.put(updatedEpic.getId(), updatedEpic);
+                }
+            }
+
+            for (Epic epic : manager.epics.values()) {
+                manager.updateEpicStatus(epic.getId());
             }
 
         } catch (IOException e) {

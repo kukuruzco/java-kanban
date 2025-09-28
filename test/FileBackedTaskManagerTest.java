@@ -277,4 +277,83 @@ class FileBackedTaskManagerTest {
         assertNotNull(history, "История не должна быть null");
     }
 
+    @Test
+    @DisplayName("Восстановление связей эпиков и подзадач при загрузке из файла")
+    void testEpicSubTaskRelationshipsAfterLoad() throws IOException {
+        File file = File.createTempFile("test_relationships", ".csv");
+        file.deleteOnExit();
+
+        FileBackedTaskManager manager = new FileBackedTaskManager(file.getAbsolutePath());
+
+        // 1. Создаем эпик
+        Epic epic = new Epic("Основной эпик", "Описание основного эпика");
+        manager.addEpic(epic);
+
+        List<Epic> epics = manager.getAllEpics();
+        assertEquals(1, epics.size(), "Должен быть 1 эпик");
+        Epic epicWithId = epics.getFirst();
+        int epicId = epicWithId.getId();
+
+        // 2. Создаем несколько подзадач для этого эпика
+        SubTask subTask1 = new SubTask("Подзадача 1", "Описание подзадачи 1", epicId);
+        SubTask subTask2 = new SubTask("Подзадача 2", "Описание подзадачи 2", epicId);
+        SubTask subTask3 = new SubTask("Подзадача 3", "Описание подзадачи 3", epicId);
+
+        manager.addSubTask(subTask1);
+        manager.addSubTask(subTask2);
+        manager.addSubTask(subTask3);
+
+        // 3. ПЕРЕПОЛУЧАЕМ эпик из менеджера после добавления подзадач
+        Epic updatedEpic = manager.getEpicById(epicId);
+        assertNotNull(updatedEpic, "Эпик должен существовать после добавления подзадач");
+
+        // 4. Проверяем, что в оригинальном менеджере связи работают
+        List<SubTask> originalSubTasks = manager.getSubtasksByEpic(epicId);
+        assertEquals(3, originalSubTasks.size(), "Должно быть 3 подзадачи у эпика");
+
+        // Проверяем, что у эпика есть список подзадач (после добавления подзадач)
+        assertNotNull(updatedEpic.getSubTaskIds(), "У эпика должен быть список ID подзадач");
+        assertEquals(3, updatedEpic.getSubTaskIds().size(), "У эпика должно быть 3 ID подзадач");
+
+        // 5. Загружаем менеджер из файла
+        FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(file);
+
+        // 6. Проверяем, что все задачи загрузились
+        List<Epic> loadedEpics = loadedManager.getAllEpics();
+        List<SubTask> loadedSubTasks = loadedManager.getAllSubTasks();
+
+        assertEquals(1, loadedEpics.size(), "Должен быть загружен 1 эпик");
+        assertEquals(3, loadedSubTasks.size(), "Должны быть загружены 3 подзадачи");
+
+        // 7. Проверяем восстановление связей
+        Epic loadedEpic = loadedEpics.getFirst();
+
+        // Проверяем, что у загруженного эпика есть список подзадач
+        assertNotNull(loadedEpic.getSubTaskIds(), "У загруженного эпика должен быть список ID подзадач");
+        assertEquals(3, loadedEpic.getSubTaskIds().size(), "У загруженного эпика должно быть 3 ID подзадач");
+
+        // Проверяем, что список подзадач эпика соответствует загруженным подзадачам
+        List<SubTask> loadedEpicSubTasks = loadedManager.getSubtasksByEpic(loadedEpic.getId());
+        assertEquals(3, loadedEpicSubTasks.size(), "Должно быть 3 подзадачи у загруженного эпика");
+
+        // Проверяем, что каждая подзадача ссылается на правильный эпик
+        for (SubTask loadedSubTask : loadedSubTasks) {
+            assertEquals(loadedEpic.getId(), loadedSubTask.getEpicId(),
+                    "Подзадача должна ссылаться на правильный эпик");
+        }
+
+        // Проверяем, что ID подзадач в списке эпика соответствуют реальным подзадачам
+        for (Integer subTaskId : loadedEpic.getSubTaskIds()) {
+            SubTask subTask = loadedManager.getSubTaskById(subTaskId);
+            assertNotNull(subTask, "Подзадача с ID " + subTaskId + " должна существовать");
+            assertEquals(loadedEpic.getId(), subTask.getEpicId(),
+                    "Подзадача из списка эпика должна ссылаться на этот эпик");
+        }
+
+        // 8. Проверяем корректность статусов
+        // Все подзадачи NEW -> эпик должен быть NEW
+        assertEquals(StatusTask.NEW, loadedEpic.getStatusTask(),
+                "Эпик со всеми подзадачами NEW должен иметь статус NEW");
+    }
+
 }
