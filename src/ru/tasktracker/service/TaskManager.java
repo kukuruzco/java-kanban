@@ -7,6 +7,7 @@ import ru.tasktracker.model.Task;
 import java.util.List;
 
 public interface TaskManager {
+    List<Task> getPrioritizedTasks();
     List<Task> getHistory();
 
     Task addTask(Task task);
@@ -47,5 +48,6 @@ public interface TaskManager {
 
     void updateSubTask(SubTask updatedSubTask);
 
+    boolean isTaskOverlap(Task task);
 }
 

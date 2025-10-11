@@ -5,9 +5,13 @@ import ru.tasktracker.service.HistoryManager;
 import ru.tasktracker.service.TaskManager;
 import ru.tasktracker.util.Managers;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ManagersTest {
 
@@ -43,7 +47,8 @@ class ManagersTest {
         assertNotNull(historyManager, "HistoryManager не должен быть null");
 
         // Должен уметь добавлять задачи
-        Task task = new Task("Test", "Description");
+        Task task = new Task("Test", "Description",
+                LocalDateTime.of(2024, 1, 15, 10, 0), Duration.ofMinutes(30));
 
         historyManager.addHistory(task);
 
@@ -59,12 +64,12 @@ class ManagersTest {
         TaskManager taskManager = Managers.getDefault();
 
         // Создаем и получаем задачу - она должна добавиться в историю
-        Task task = taskManager.addTask(new Task("TestTask", "Description"));
+        Task task = taskManager.addTask(new Task("TestTask", "Description",
+                LocalDateTime.of(2024, 1, 15, 10, 0), Duration.ofMinutes(30)));
         Task retrieved = taskManager.getTaskById(task.getId());
 
         // Проверяем, что история работает
         List<Task> history = taskManager.getHistory();
         assertNotNull(history, "История не должна быть null");
-
     }
 }

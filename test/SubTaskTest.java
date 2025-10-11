@@ -4,7 +4,13 @@ import ru.tasktracker.model.SubTask;
 import ru.tasktracker.service.TaskManager;
 import ru.tasktracker.util.Managers;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class SubTaskTest {
     @Test
@@ -21,13 +27,17 @@ class SubTaskTest {
         SubTask subtask = manager.addSubTask(new SubTask(
                 "Test Subtask",
                 "Test Subtask Desc",
-                epicId
+                epicId,
+                LocalDateTime.of(2024, 1, 15, 10, 0),
+                Duration.ofMinutes(30)
         ));
 
         int subtaskId = subtask.getId();
 
         // Подзадача ссылается на правильный эпик
         assertEquals(epicId, subtask.getEpicId());
+        assertEquals(LocalDateTime.of(2024, 1, 15, 10, 0), subtask.getStartTime());
+        assertEquals(Duration.ofMinutes(30), subtask.getDuration());
 
         // Эпик должен содержать id подзадачи в своем списке
         Epic updatedEpic = manager.getEpicById(epicId);
@@ -52,7 +62,9 @@ class SubTaskTest {
         SubTask subtask = manager.addSubTask(new SubTask(
                 "Test Subtask to Remove",
                 "Test Subtask Desc to Remove",
-                epicId
+                epicId,
+                LocalDateTime.of(2024, 1, 15, 11, 0),
+                Duration.ofMinutes(45)
         ));
         int subtaskId = subtask.getId();
 
@@ -77,7 +89,5 @@ class SubTaskTest {
         // Пытаемся получить удаленную подзадачу
         SubTask removedSubtask = manager.getSubTaskById(subtaskId);
         assertNull(removedSubtask, "Удаленная подзадача не должна быть доступна через менеджер");
-
     }
-
 }

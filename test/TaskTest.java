@@ -5,9 +5,12 @@ import ru.tasktracker.model.Task;
 import ru.tasktracker.service.TaskManager;
 import ru.tasktracker.util.Managers;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class TaskTest {
     private TaskManager manager;
@@ -21,7 +24,9 @@ class TaskTest {
     void addNewTask() {
         Task task = manager.addTask(new Task(
                 "Test addNewTask",
-                "Test addNewTask description"
+                "Test addNewTask description",
+                LocalDateTime.of(2024, 1, 15, 10, 0),
+                Duration.ofMinutes(30)
         ));
 
         int taskid = task.getId();
@@ -31,6 +36,8 @@ class TaskTest {
         System.out.println(savedTask);
         assertNotNull(savedTask, "Задача не найдена.");
         assertEquals(task, savedTask, "Задачи не совпадают.");
+        assertEquals(LocalDateTime.of(2024, 1, 15, 10, 0), savedTask.getStartTime());
+        assertEquals(Duration.ofMinutes(30), savedTask.getDuration());
 
         final List<Task> tasks = manager.getAllTasks();
 
@@ -43,11 +50,15 @@ class TaskTest {
     void deleteAllTasks() {
         Task task1 = manager.addTask(new Task(
                 "Test1 addNewTask",
-                "Test addNewTask description"
+                "Test addNewTask description",
+                LocalDateTime.of(2024, 1, 15, 10, 0),
+                Duration.ofMinutes(30)
         ));
         Task task2 = manager.addTask(new Task(
                 "Test2 addNewTask",
-                "Test addNewTask description"
+                "Test addNewTask description",
+                LocalDateTime.of(2024, 1, 15, 11, 0),
+                Duration.ofMinutes(45)
         ));
 
         assertEquals(2, manager.getAllTasks().size(), "Неверное количество задач.");
@@ -63,23 +74,12 @@ class TaskTest {
     @DisplayName("Изменение задачи через сеттер не должно влиять на задачу в менеджере")
     void testTaskModificationThroughSetterShouldNotAffectManager() {
         // Создаем и добавляем задачу
-        Task originalTask = new Task("Original", "Description");
+        Task originalTask = new Task("Original", "Description",
+                LocalDateTime.of(2024, 1, 15, 10, 0), Duration.ofMinutes(30));
         Task addedTask = manager.addTask(originalTask);
         int taskid = addedTask.getId();
 
         // Получаем задачу из менеджера
         Task taskFromManager = manager.getTaskById(taskid);
-
-        // Меняем задачу через сеттер (ОПАСНО!)
-//        taskFromManager.setTaskName("Modified Title");
-//        taskFromManager.setTaskDescription("Modified Description");
-//        taskFromManager.setStatusTask(StatusTask.DONE);
-//
-//        // Проверяем, что задача в менеджере НЕ изменилась
-//        Task taskAfterModification = manager.getTaskByid(taskid);
-//        assertEquals("Original", taskAfterModification.getTaskName());
-//        assertEquals("Description", taskAfterModification.getTaskDescription());
-//        assertEquals(StatusTask.NEW, taskAfterModification.getStatusTask());
     }
-
 }
