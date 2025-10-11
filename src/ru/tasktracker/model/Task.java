@@ -100,6 +100,7 @@ public class Task {
     public StatusTask getStatusTask() {
         return statusTask;
     }
+
     public Duration getDuration() {
         return duration;
     }

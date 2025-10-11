@@ -36,7 +36,9 @@ public class Epic extends Task {
         return subTaskIds;
     }
 
-    public LocalDateTime getEndTime() { return endTime; }
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
 
     public StatusTask updateStatus(List<SubTask> epicSubtasks) {
         if (epicSubtasks.isEmpty()) {

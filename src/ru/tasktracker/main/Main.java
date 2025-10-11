@@ -1,6 +1,9 @@
 package ru.tasktracker.main;
 
-import ru.tasktracker.model.*;
+import ru.tasktracker.model.Epic;
+import ru.tasktracker.model.StatusTask;
+import ru.tasktracker.model.SubTask;
+import ru.tasktracker.model.Task;
 import ru.tasktracker.service.TaskManager;
 import ru.tasktracker.util.Managers;
 
@@ -14,7 +17,7 @@ public class Main {
         System.out.println("Поехали!");
         TaskManager taskManager = Managers.getDefault();
         taskManager.addTask(new Task("Помыть посуду"
-                ,"Вымыть всю посуду на кухне"
+                , "Вымыть всю посуду на кухне"
                 , LocalDateTime.of(2025, 9, 11, 11, 30)
                 , Duration.ofMinutes(25)));
         taskManager.addTask(new Task("Сделать ДЗ"
@@ -28,11 +31,11 @@ public class Main {
                 , 3
                 , LocalDateTime.of(2025, 9, 12, 14, 30)
                 , Duration.ofMinutes(15)));
-            taskManager.addSubTask(new SubTask("Демонтаж стен"
-                    , "Снести перегородку"
-                    , 4
-                    , LocalDateTime.of(2025, 9, 12, 15, 30)
-                    , Duration.ofMinutes(20)));
+        taskManager.addSubTask(new SubTask("Демонтаж стен"
+                , "Снести перегородку"
+                , 4
+                , LocalDateTime.of(2025, 9, 12, 15, 30)
+                , Duration.ofMinutes(20)));
         taskManager.addSubTask(new SubTask("Замена дверей"
                 , "Монтаж дверных проемов"
                 , 4
