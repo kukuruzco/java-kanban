@@ -122,8 +122,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                         subTask.getId(),
                         TypeTask.SUBTASK,
                         subTask.getTaskName(),
-                        subTask.getStatusTask(),
                         subTask.getTaskDescription(),
+                        subTask.getStatusTask(),
                         subTask.getEpicId(),
                         startTimeStr,
                         durationStr,
@@ -137,8 +137,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                         epic.getId(),
                         TypeTask.EPIC,
                         epic.getTaskName(),
-                        epic.getStatusTask(),
                         epic.getTaskDescription(),
+                        epic.getStatusTask(),
                         "",
                         startTimeStr,
                         durationStr,
@@ -148,8 +148,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                         task.getId(),
                         TypeTask.TASK,
                         task.getTaskName(),
-                        task.getStatusTask(),
                         task.getTaskDescription(),
+                        task.getStatusTask(),
                         "",
                         startTimeStr,
                         durationStr,
@@ -191,9 +191,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         int id = Integer.parseInt(fields[0]);
         TypeTask type = TypeTask.valueOf(fields[1]);
         String name = fields[2];
-        StatusTask status = StatusTask.valueOf(fields[3]);
-        String description = fields[4];
-
+        String description = fields[3];
+        StatusTask status = StatusTask.valueOf(fields[4]);
         LocalDateTime startTime = null;
         Duration duration = Duration.ZERO;
         LocalDateTime endTime = null;
@@ -241,12 +240,22 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             tasks.forEach(task -> {
                 if (task.getType() == TypeTask.SUBTASK) {
                     manager.subtasks.put(task.getId(), (SubTask) task);
+                    manager.prioritizedTasks.add(task);
                 } else if (task.getType() == TypeTask.EPIC) {
                     manager.epics.put(task.getId(), (Epic) task);
                 } else {
                     manager.tasks.put(task.getId(), task);
+                    manager.prioritizedTasks.add(task);
                 }
             });
+
+            boolean hasOverlaps = manager.prioritizedTasks.stream()
+                    .filter(task -> task.getStartTime() != null)
+                    .anyMatch(manager::isTaskOverlap);
+
+            if (hasOverlaps) {
+                throw new ManagerSaveException("Обнаружены пересечения по времени в загружаемых задачах");
+            }
 
             Map<Integer, List<Integer>> epicSubTasks = manager.subtasks.values().stream()
                     .collect(Collectors.groupingBy(
@@ -278,6 +287,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     public static class ManagerSaveException extends RuntimeException {
         public ManagerSaveException(String message, Throwable cause) {
             super(message, cause);
+        }
+
+        public ManagerSaveException(String message) {
+            super(message);
         }
     }
 }
