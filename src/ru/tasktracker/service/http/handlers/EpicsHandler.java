@@ -1,7 +1,6 @@
 package ru.tasktracker.service.http.handlers;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import ru.tasktracker.model.Epic;
