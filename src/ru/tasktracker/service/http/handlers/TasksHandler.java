@@ -88,7 +88,7 @@ public class TasksHandler extends BaseHttpHandler {
             if (taskExists) {
                 // Обновление существующей задачи
                 taskManager.updateTask(task);
-                sendText(exchange, "{\"message\": \"Task updated\"}", 200);
+                sendText(exchange, "{\"message\": \"Task updated\"}", 201);
             } else {
                 // Создание новой задачи
                 Task createdTask = taskManager.addTask(task);
