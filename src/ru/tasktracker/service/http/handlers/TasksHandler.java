@@ -1,7 +1,6 @@
 package ru.tasktracker.service.http.handlers;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import ru.tasktracker.model.Task;
@@ -71,43 +70,27 @@ public class TasksHandler extends BaseHttpHandler {
         }
 
         try {
-            JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
+            Task task = gson.fromJson(body, Task.class);
 
-            if (jsonObject == null) {
-                sendText(exchange, "{\"error\": \"Invalid JSON format\"}", 400);
+            if (task == null) {
+                sendText(exchange, "{\"error\": \"Failed to parse task from JSON\"}", 400);
                 return;
             }
 
-            boolean hasId = jsonObject.has("id") && !jsonObject.get("id").isJsonNull();
+            if (task.getTaskName() == null || task.getTaskName().trim().isEmpty()) {
+                sendText(exchange, "{\"error\": \"Task name is required\"}", 400);
+                return;
+            }
 
-            if (hasId) {
-                Task task = gson.fromJson(body, Task.class);
+            // Проверяем существует ли задача с таким ID
+            boolean taskExists = task.getId() != null && taskManager.getTaskById(task.getId()) != null;
 
-                if (task == null) {
-                    sendText(exchange, "{\"error\": \"Failed to parse task from JSON\"}", 400);
-                    return;
-                }
-
-                Task existingTask = taskManager.getTaskById(task.getId());
-                if (existingTask != null) {
-                    taskManager.updateTask(task);
-                    sendText(exchange, "{\"message\": \"Task updated\"}", 201);
-                } else {
-                    sendNotFound(exchange);
-                }
+            if (taskExists) {
+                // Обновление существующей задачи
+                taskManager.updateTask(task);
+                sendText(exchange, "{\"message\": \"Task updated\"}", 200);
             } else {
-                Task task = gson.fromJson(body, Task.class);
-
-                if (task == null) {
-                    sendText(exchange, "{\"error\": \"Failed to parse task from JSON\"}", 400);
-                    return;
-                }
-
-                if (task.getTaskName() == null || task.getTaskName().trim().isEmpty()) {
-                    sendText(exchange, "{\"error\": \"Task name is required\"}", 400);
-                    return;
-                }
-
+                // Создание новой задачи
                 Task createdTask = taskManager.addTask(task);
                 sendText(exchange, gson.toJson(createdTask), 201);
             }
