@@ -1,8 +1,8 @@
 import com.google.gson.reflect.TypeToken;
 import org.junit.jupiter.api.Test;
 import ru.tasktracker.model.Epic;
-import ru.tasktracker.model.SubTask;
 import ru.tasktracker.model.StatusTask;
+import ru.tasktracker.model.SubTask;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,7 +13,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class HttpTaskManagerEpicsTest extends HttpTaskServerTestBase {
 

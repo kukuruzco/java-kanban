@@ -1,7 +1,7 @@
 import com.google.gson.reflect.TypeToken;
 import org.junit.jupiter.api.Test;
-import ru.tasktracker.model.Task;
 import ru.tasktracker.model.StatusTask;
+import ru.tasktracker.model.Task;
 import ru.tasktracker.model.TypeTask;
 
 import java.io.IOException;

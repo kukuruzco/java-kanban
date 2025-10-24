@@ -5,13 +5,13 @@ import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpServer;
 import ru.tasktracker.model.SubTask;
 import ru.tasktracker.model.Task;
+import ru.tasktracker.service.http.adapters.DurationAdapter;
+import ru.tasktracker.service.http.adapters.LocalDateTimeAdapter;
 import ru.tasktracker.service.http.adapters.SubTaskAdapter;
 import ru.tasktracker.service.http.adapters.TaskAdapter;
 import ru.tasktracker.service.http.handlers.*;
-import ru.tasktracker.service.http.adapters.LocalDateTimeAdapter;
-import ru.tasktracker.service.http.adapters.DurationAdapter;
-import ru.tasktracker.util.Managers;
 import ru.tasktracker.service.managers.TaskManager;
+import ru.tasktracker.util.Managers;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

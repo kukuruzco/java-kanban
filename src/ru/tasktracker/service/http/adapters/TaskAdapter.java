@@ -5,9 +5,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import ru.tasktracker.model.Task;
+
 import java.lang.reflect.Type;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 public class TaskAdapter implements JsonSerializer<Task> {
     @Override

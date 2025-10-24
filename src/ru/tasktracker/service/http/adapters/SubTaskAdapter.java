@@ -1,10 +1,12 @@
 package ru.tasktracker.service.http.adapters;
 
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import ru.tasktracker.model.SubTask;
+
 import java.lang.reflect.Type;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 public class SubTaskAdapter implements JsonSerializer<SubTask> {
     @Override

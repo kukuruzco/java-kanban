@@ -4,8 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
-import ru.tasktracker.service.managers.TaskManager;
 import ru.tasktracker.model.Task;
+import ru.tasktracker.service.managers.TaskManager;
+
 import java.io.IOException;
 import java.util.List;
 

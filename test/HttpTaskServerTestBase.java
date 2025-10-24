@@ -2,8 +2,8 @@ import com.google.gson.Gson;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import ru.tasktracker.main.HttpTaskServer;
-import ru.tasktracker.util.Managers;
 import ru.tasktracker.service.managers.TaskManager;
+import ru.tasktracker.util.Managers;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
