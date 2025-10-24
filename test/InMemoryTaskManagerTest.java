@@ -1,8 +1,8 @@
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.tasktracker.model.Task;
-import ru.tasktracker.service.InMemoryHistoryManager;
-import ru.tasktracker.service.InMemoryTaskManager;
+import ru.tasktracker.service.managers.InMemoryHistoryManager;
+import ru.tasktracker.service.managers.InMemoryTaskManager;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

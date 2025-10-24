@@ -1,4 +1,4 @@
-package ru.tasktracker.service;
+package ru.tasktracker.service.managers;
 
 import ru.tasktracker.model.*;
 
@@ -85,19 +85,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     @Override
-    public void deleteTaskById(int id) {
+    public void deleteTaskById(Integer id) {
         super.deleteTaskById(id);
         save();
     }
 
     @Override
-    public void deleteEpicById(int epicId) {
+    public void deleteEpicById(Integer epicId) {
         super.deleteEpicById(epicId);
         save();
     }
 
     @Override
-    public void deleteSubTaskById(int subtaskId) {
+    public void deleteSubTaskById(Integer subtaskId) {
         super.deleteSubTaskById(subtaskId);
         save();
     }

@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.Test;
 import ru.tasktracker.model.Epic;
 import ru.tasktracker.model.SubTask;
-import ru.tasktracker.service.TaskManager;
+import ru.tasktracker.service.managers.TaskManager;
 import ru.tasktracker.util.Managers;
 
 import java.time.Duration;

@@ -1,4 +1,4 @@
-package ru.tasktracker.service;
+package ru.tasktracker.service.managers;
 
 import ru.tasktracker.model.Epic;
 import ru.tasktracker.model.SubTask;
@@ -17,13 +17,13 @@ public interface TaskManager {
 
     void deleteAllTasks();
 
-    Task getTaskById(int id);
+    Task getTaskById(Integer id);
 
-    void deleteSubTaskById(int subtaskId);
+    void deleteSubTaskById(Integer subtaskId);
 
     void updateTask(Task updatedTask);
 
-    SubTask getSubTaskById(int id);
+    SubTask getSubTaskById(Integer id);
 
     List<Epic> getAllEpics();
 
@@ -33,17 +33,17 @@ public interface TaskManager {
 
     void updateEpic(Epic updatedEpic);
 
-    void deleteTaskById(int id);
+    void deleteTaskById(Integer id);
 
     SubTask addSubTask(SubTask subtask);
 
     List<SubTask> getAllSubTasks();
 
-    List<SubTask> getSubtasksByEpic(int epicId);
+    List<SubTask> getSubtasksByEpic(Integer epicId);
 
-    Epic getEpicById(int id);
+    Epic getEpicById(Integer id);
 
-    void deleteEpicById(int epicId);
+    void deleteEpicById(Integer epicId);
 
     void deleteAllSubTasks();
 

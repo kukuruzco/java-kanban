@@ -14,18 +14,18 @@ public class Epic extends Task {
         super(TypeTask.EPIC, taskName, taskDescription, StatusTask.NEW, null, null);
     }
 
-    public Epic(int id, String taskName, String taskDescription, StatusTask statusTask) {
+    public Epic(Integer id, String taskName, String taskDescription, StatusTask statusTask) {
         super(TypeTask.EPIC, id, taskName, taskDescription, statusTask, null, null);
     }
 
-    public Epic(int id, String taskName, String taskDescription, StatusTask statusTask,
+    public Epic(Integer id, String taskName, String taskDescription, StatusTask statusTask,
                 List<Integer> subTaskIds) {
         super(TypeTask.EPIC, id, taskName, taskDescription, statusTask, null, null);
         this.subTaskIds = new ArrayList<>(subTaskIds);
         this.endTime = null;
     }
 
-    public Epic(int id, String taskName, String taskDescription, StatusTask statusTask,
+    public Epic(Integer id, String taskName, String taskDescription, StatusTask statusTask,
                 List<Integer> subTaskIds, LocalDateTime startTime, Duration duration, LocalDateTime endTime) {
         super(TypeTask.EPIC, id, taskName, taskDescription, statusTask, startTime, duration);
         this.subTaskIds = new ArrayList<>(subTaskIds);

@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test;
 import ru.tasktracker.model.Epic;
 import ru.tasktracker.model.SubTask;
 import ru.tasktracker.model.Task;
-import ru.tasktracker.service.FileBackedTaskManager;
+import ru.tasktracker.service.managers.FileBackedTaskManager;
 
 import java.io.File;
 import java.io.IOException;

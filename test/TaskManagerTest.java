@@ -5,7 +5,7 @@ import ru.tasktracker.model.Epic;
 import ru.tasktracker.model.StatusTask;
 import ru.tasktracker.model.SubTask;
 import ru.tasktracker.model.Task;
-import ru.tasktracker.service.TaskManager;
+import ru.tasktracker.service.managers.TaskManager;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

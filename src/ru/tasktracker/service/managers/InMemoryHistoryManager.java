@@ -1,4 +1,4 @@
-package ru.tasktracker.service;
+package ru.tasktracker.service.managers;
 
 import ru.tasktracker.model.Task;
 

@@ -1,9 +1,9 @@
 package ru.tasktracker.util;
 
-import ru.tasktracker.service.HistoryManager;
-import ru.tasktracker.service.InMemoryHistoryManager;
-import ru.tasktracker.service.InMemoryTaskManager;
-import ru.tasktracker.service.TaskManager;
+import ru.tasktracker.service.managers.HistoryManager;
+import ru.tasktracker.service.managers.InMemoryHistoryManager;
+import ru.tasktracker.service.managers.InMemoryTaskManager;
+import ru.tasktracker.service.managers.TaskManager;
 
 public class Managers {
     public static TaskManager getDefault() {
