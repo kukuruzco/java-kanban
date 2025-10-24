@@ -126,7 +126,8 @@ class HttpTaskManagerEpicsTest extends HttpTaskServerTestBase {
 
         assertEquals(200, response.statusCode(), "Неверный статус код при получении эпиков");
 
-        List<Epic> epics = gson.fromJson(response.body(), new TypeToken<List<Epic>>(){}.getType());
+        List<Epic> epics = gson.fromJson(response.body(), new TypeToken<List<Epic>>() {
+        }.getType());
         assertEquals(1, epics.size(), "Должен вернуться один эпик");
         assertEquals("Test Epic", epics.get(0).getTaskName(), "Некорректное имя эпика");
     }
@@ -206,7 +207,8 @@ class HttpTaskManagerEpicsTest extends HttpTaskServerTestBase {
 
         assertEquals(200, response.statusCode(), "Неверный статус код при получении подзадач эпика");
 
-        List<SubTask> subtasks = gson.fromJson(response.body(), new TypeToken<List<SubTask>>(){}.getType());
+        List<SubTask> subtasks = gson.fromJson(response.body(), new TypeToken<List<SubTask>>() {
+        }.getType());
         assertEquals(1, subtasks.size(), "Должна вернуться одна подзадача");
         assertEquals("Test Subtask", subtasks.get(0).getTaskName(), "Некорректное имя подзадачи");
     }

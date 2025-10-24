@@ -97,7 +97,8 @@ class HttpTaskManagerSubtasksTest extends HttpTaskServerTestBase {
 
         assertEquals(200, response.statusCode(), "Неверный статус код при получении подзадач");
 
-        List<SubTask> subtasks = gson.fromJson(response.body(), new TypeToken<List<SubTask>>(){}.getType());
+        List<SubTask> subtasks = gson.fromJson(response.body(), new TypeToken<List<SubTask>>() {
+        }.getType());
         assertEquals(1, subtasks.size(), "Должна вернуться одна подзадача");
         assertEquals("Test Subtask", subtasks.get(0).getTaskName(), "Некорректное имя подзадачи");
     }

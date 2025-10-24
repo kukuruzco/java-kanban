@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
+    private static int counter = 0;
     private final Integer id;
     private final String taskName;
     private final String taskDescription;
@@ -14,7 +15,7 @@ public class Task {
     private final LocalDateTime startTime;
 
     public Task() {
-        this.id = null;
+        this.id = ++counter;
         this.taskName = "";
         this.taskDescription = "";
         this.statusTask = StatusTask.NEW;
@@ -28,7 +29,7 @@ public class Task {
                 LocalDateTime startTime,
                 Duration duration) {
         this.type = TypeTask.TASK;
-        this.id = null;
+        this.id = ++counter;
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.statusTask = StatusTask.NEW;
@@ -48,6 +49,10 @@ public class Task {
         this.statusTask = statusTask;
         this.startTime = startTime;
         this.duration = duration;
+
+        if (id >= counter) {
+            counter = id + 1;
+        }
     }
 
     public Task(TypeTask type, String taskName,
@@ -56,7 +61,7 @@ public class Task {
                 LocalDateTime startTime,
                 Duration duration) {
         this.type = type;
-        this.id = null;
+        this.id = ++counter;
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.statusTask = statusTask;
@@ -69,7 +74,7 @@ public class Task {
                 LocalDateTime startTime,
                 Duration duration) {
         this.type = type;
-        this.id = null;
+        this.id = ++counter;
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.statusTask = StatusTask.NEW;
@@ -89,6 +94,10 @@ public class Task {
         this.statusTask = statusTask;
         this.startTime = startTime;
         this.duration = duration;
+
+        if (id >= counter) {
+            counter = id + 1;
+        }
     }
 
     public TypeTask getType() {

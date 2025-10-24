@@ -89,7 +89,8 @@ class HttpTaskManagerTasksTest extends HttpTaskServerTestBase {
         assertEquals(200, response.statusCode(), "Неверный статус код при получении задач");
         assertNotNull(response.body(), "Тело ответа не должно быть null");
 
-        List<Task> tasks = gson.fromJson(response.body(), new TypeToken<List<Task>>(){}.getType());
+        List<Task> tasks = gson.fromJson(response.body(), new TypeToken<List<Task>>() {
+        }.getType());
         assertEquals(1, tasks.size(), "Должна вернуться одна задача");
         assertEquals("Test Task", tasks.get(0).getTaskName(), "Некорректное имя задачи");
     }
