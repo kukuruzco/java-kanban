@@ -1,8 +1,10 @@
 package ru.tasktracker.service.http.handlers;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
+import ru.tasktracker.exceptions.NotFoundException;
 import ru.tasktracker.model.SubTask;
 import ru.tasktracker.service.managers.TaskManager;
 
@@ -50,10 +52,10 @@ public class SubTasksHandler extends BaseHttpHandler {
             String[] pathParts = path.split("/");
             int id = Integer.parseInt(pathParts[2]);
 
-            SubTask subtask = taskManager.getSubTaskById(id);
-            if (subtask != null) {
+            try {
+                SubTask subtask = taskManager.getSubTaskById(id);
                 sendText(exchange, gson.toJson(subtask));
-            } else {
+            } catch (Exception e) {
                 sendNotFound(exchange);
             }
         } else {
@@ -70,41 +72,44 @@ public class SubTasksHandler extends BaseHttpHandler {
         }
 
         try {
-            SubTask subtask = gson.fromJson(body, SubTask.class);
+            JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
+            boolean hasIdInRequest = jsonObject.has("id") && !jsonObject.get("id").isJsonNull();
 
-            if (subtask == null) {
-                sendText(exchange, "{\"error\": \"Failed to parse subtask from JSON\"}", 400);
-                return;
-            }
+            SubTask subtask = gson.fromJson(body, SubTask.class);
 
             if (subtask.getTaskName() == null || subtask.getTaskName().trim().isEmpty()) {
                 sendText(exchange, "{\"error\": \"Subtask name is required\"}", 400);
                 return;
             }
 
-            // ПРОВЕРЯЕМ СУЩЕСТВОВАНИЕ ПОДЗАДАЧИ В МЕНЕДЖЕРЕ
-            boolean subtaskExists = subtask.getId() != null && taskManager.getSubTaskById(subtask.getId()) != null;
-
-            if (subtaskExists) {
-                // ОБНОВЛЕНИЕ существующей подзадачи
-                taskManager.updateSubTask(subtask);
-                sendText(exchange, "{\"message\": \"Subtask updated\"}", 201);
+            if (hasIdInRequest) {
+                try {
+                    taskManager.updateSubTask(subtask);
+                    sendText(exchange, "{\"message\": \"Subtask updated\"}", 201);
+                } catch (NotFoundException e) {
+                    sendNotFound(exchange);
+                } catch (Exception e) {
+                    sendText(exchange, "{\"error\": \"Update failed: " + e.getMessage() + "\"}", 400);
+                }
             } else {
-                // СОЗДАНИЕ новой подзадачи
-                SubTask createdSubtask = taskManager.addSubTask(subtask);
-                sendText(exchange, gson.toJson(createdSubtask), 201);
+                try {
+                    SubTask createdSubtask = taskManager.addSubTask(subtask);
+                    sendText(exchange, gson.toJson(createdSubtask), 201);
+                } catch (NotFoundException e) {
+                    sendNotFound(exchange);
+                } catch (RuntimeException e) {
+                    if (e.getMessage() != null && e.getMessage().toLowerCase().contains("intersection")) {
+                        sendText(exchange, "{\"error\": \"Time intersection detected\"}", 406);
+                    } else {
+                        sendText(exchange, "{\"error\": \"Failed to create subtask: " + e.getMessage() + "\"}", 400);
+                    }
+                } catch (Exception addException) {
+                    sendText(exchange, "{\"error\": \"Failed to create subtask: " + addException.getMessage() + "\"}", 400);
+                }
             }
 
         } catch (JsonSyntaxException e) {
             sendText(exchange, "{\"error\": \"Invalid JSON syntax: " + e.getMessage() + "\"}", 400);
-        } catch (RuntimeException e) {
-            if (e.getMessage() != null &&
-                    (e.getMessage().toLowerCase().contains("intersection") ||
-                            e.getMessage().toLowerCase().contains("interaction"))) {
-                sendText(exchange, "{\"error\": \"Time intersection detected\"}", 409);
-            } else {
-                sendInternalError(exchange);
-            }
         } catch (Exception e) {
             sendInternalError(exchange);
         }
@@ -115,11 +120,10 @@ public class SubTasksHandler extends BaseHttpHandler {
             String[] pathParts = path.split("/");
             int id = Integer.parseInt(pathParts[2]);
 
-            SubTask subtask = taskManager.getSubTaskById(id);
-            if (subtask != null) {
+            try {
                 taskManager.deleteSubTaskById(id);
                 sendText(exchange, "{\"message\": \"Subtask deleted\"}");
-            } else {
+            } catch (Exception e) {
                 sendNotFound(exchange);
             }
         } else {

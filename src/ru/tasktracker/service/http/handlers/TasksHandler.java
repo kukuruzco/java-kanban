@@ -1,6 +1,8 @@
 package ru.tasktracker.service.http.handlers;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import ru.tasktracker.model.Task;
@@ -35,7 +37,7 @@ public class TasksHandler extends BaseHttpHandler {
                     handleDelete(exchange, path);
                     break;
                 default:
-                    sendText(exchange, "{\"error\": \"Method Not Allowed\"}", 405);
+                    sendText(exchange, "{\"error\": \"Метод не поддерживается\"}", 405);
             }
         } catch (Exception e) {
             sendInternalError(exchange);
@@ -50,10 +52,10 @@ public class TasksHandler extends BaseHttpHandler {
             String[] pathParts = path.split("/");
             int id = Integer.parseInt(pathParts[2]);
 
-            Task task = taskManager.getTaskById(id);
-            if (task != null) {
+            try {
+                Task task = taskManager.getTaskById(id);
                 sendText(exchange, gson.toJson(task));
-            } else {
+            } catch (Exception e) {
                 sendNotFound(exchange);
             }
         } else {
@@ -65,46 +67,48 @@ public class TasksHandler extends BaseHttpHandler {
         String body = readText(exchange);
 
         if (body == null || body.trim().isEmpty()) {
-            sendText(exchange, "{\"error\": \"Request body is empty\"}", 400);
+            sendText(exchange, "{\"error\": \"Тело запроса пустое\"}", 400);
             return;
         }
 
         try {
+            JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
+            boolean hasIdInRequest = jsonObject.has("id") && !jsonObject.get("id").isJsonNull();
+
             Task task = gson.fromJson(body, Task.class);
 
-            if (task == null) {
-                sendText(exchange, "{\"error\": \"Failed to parse task from JSON\"}", 400);
-                return;
-            }
-
             if (task.getTaskName() == null || task.getTaskName().trim().isEmpty()) {
-                sendText(exchange, "{\"error\": \"Task name is required\"}", 400);
+                sendText(exchange, "{\"error\": \"Имя задачи обязательно\"}", 400);
                 return;
             }
 
-            // Проверяем существует ли задача с таким ID
-            boolean taskExists = task.getId() != null && taskManager.getTaskById(task.getId()) != null;
-
-            if (taskExists) {
-                // Обновление существующей задачи
-                taskManager.updateTask(task);
-                sendText(exchange, "{\"message\": \"Task updated\"}", 201);
+            if (hasIdInRequest) {
+                try {
+                    taskManager.updateTask(task);
+                    sendText(exchange, "{\"message\": \"Задача обновлена\"}", 201);
+                } catch (Exception e) {
+                    sendText(exchange, "{\"error\": \"Ошибка обновления: " + e.getMessage() + "\"}", 400);
+                }
             } else {
-                // Создание новой задачи
-                Task createdTask = taskManager.addTask(task);
-                sendText(exchange, gson.toJson(createdTask), 201);
+                try {
+                    Task createdTask = taskManager.addTask(task);
+                    sendText(exchange, gson.toJson(createdTask), 201);
+                } catch (RuntimeException e) {
+                    // Проверяем как английское "intersection", так и русское "пересекается"
+                    if (e.getMessage() != null &&
+                            (e.getMessage().toLowerCase().contains("intersection") ||
+                                    e.getMessage().toLowerCase().contains("пересекается"))) {
+                        sendText(exchange, "{\"error\": \"Обнаружено пересечение по времени\"}", 406);
+                    } else {
+                        sendText(exchange, "{\"error\": \"Ошибка создания задачи: " + e.getMessage() + "\"}", 400);
+                    }
+                } catch (Exception addException) {
+                    sendText(exchange, "{\"error\": \"Ошибка создания задачи: " + addException.getMessage() + "\"}", 400);
+                }
             }
 
         } catch (JsonSyntaxException e) {
-            sendText(exchange, "{\"error\": \"Invalid JSON syntax: " + e.getMessage() + "\"}", 400);
-        } catch (RuntimeException e) {
-            if (e.getMessage() != null &&
-                    (e.getMessage().toLowerCase().contains("intersection") ||
-                            e.getMessage().toLowerCase().contains("interaction"))) {
-                sendText(exchange, "{\"error\": \"Time intersection detected\"}", 409);
-            } else {
-                sendInternalError(exchange);
-            }
+            sendText(exchange, "{\"error\": \"Неверный формат JSON: " + e.getMessage() + "\"}", 400);
         } catch (Exception e) {
             sendInternalError(exchange);
         }
@@ -118,7 +122,7 @@ public class TasksHandler extends BaseHttpHandler {
             Task task = taskManager.getTaskById(id);
             if (task != null) {
                 taskManager.deleteTaskById(id);
-                sendText(exchange, "{\"message\": \"Task deleted\"}");
+                sendText(exchange, "{\"message\": \"Задача удалена\"}");
             } else {
                 sendNotFound(exchange);
             }

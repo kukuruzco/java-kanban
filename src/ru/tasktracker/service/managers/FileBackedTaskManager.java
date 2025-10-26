@@ -279,7 +279,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             throw new ManagerSaveException("Ошибка загрузки", e);
         }
 
-        manager.lastid = maxId;
+        manager.lastId = maxId;
         return manager;
     }
 

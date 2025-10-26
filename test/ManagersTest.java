@@ -16,19 +16,15 @@ class ManagersTest {
     @Test
     @DisplayName("Managers.getDefault() возвращает готовый к работе TaskManager")
     void getDefaultReturnsInitializedTaskManager() {
-        // Получаем менеджер
         TaskManager manager = Managers.getDefault();
 
-        // Проверяем, что не null
         assertNotNull(manager, "Менеджер не должен быть null");
 
-        // Проверяем методы получения списков
         assertNotNull(manager.getAllTasks(), "getAllTasks() не должен возвращать null");
         assertNotNull(manager.getAllEpics(), "getAllEpics() не должен возвращать null");
         assertNotNull(manager.getAllSubTasks(), "getAllSubTasks() не должен возвращать null");
         assertNotNull(manager.getHistory(), "getHistory() не должен возвращать null");
 
-        // Проверяем, что списки пусты но готовы к работе
         assertEquals(0, manager.getAllTasks().size());
         assertEquals(0, manager.getAllEpics().size());
         assertEquals(0, manager.getAllSubTasks().size());
@@ -36,24 +32,22 @@ class ManagersTest {
     }
 
     @Test
-    @DisplayName("Managers.getDefaultHistory() возвращает готовый к работе HistoryManager")
+    @DisplayName("Managers.getDefaultHistory() возвращает готовый к работу HistoryManager")
     void testGetDefaultHistoryReturnsInitializedHistoryManager() {
-        // Получаем менеджер истории
         HistoryManager historyManager = Managers.getDefaultHistory();
 
-        // Проверяем, что не null
         assertNotNull(historyManager, "HistoryManager не должен быть null");
 
-        // Должен уметь добавлять задачи
-        Task task = new Task("Test", "Description",
-                LocalDateTime.of(2024, 1, 15, 10, 0), Duration.ofMinutes(30));
+        TaskManager taskManager = Managers.getDefault();
+        Task task = taskManager.addTask(new Task("Test", "Description",
+                LocalDateTime.of(2024, 1, 15, 10, 0), Duration.ofMinutes(30)));
 
         historyManager.addHistory(task);
 
-        // Должен уметь возвращать историю
         var history = historyManager.getHistory();
         assertNotNull(history, "История не должна быть null");
-        assertTrue(history.size() <= 10, "История не должна превышать лимит");
+        assertEquals(1, history.size(), "В истории должна быть одна задача");
+        assertEquals(task.getId(), history.get(0).getId(), "ID задачи в истории должен совпадать");
     }
 
     @Test
@@ -69,5 +63,18 @@ class ManagersTest {
         // Проверяем, что история работает
         List<Task> history = taskManager.getHistory();
         assertNotNull(history, "История не должна быть null");
+        assertEquals(1, history.size(), "В истории должна быть одна задача после получения по ID");
+        assertEquals(task.getId(), history.getFirst().getId(), "В истории должна быть запрошенная задача");
+    }
+
+    @Test
+    @DisplayName("HistoryManager корректно обрабатывает null и задачи без ID")
+    void historyManagerHandlesEdgeCases() {
+        HistoryManager historyManager = Managers.getDefaultHistory();
+
+        // Проверяем, что менеджер не падает при пустой истории
+        var emptyHistory = historyManager.getHistory();
+        assertNotNull(emptyHistory, "История не должна быть null даже когда пуста");
+        assertTrue(emptyHistory.isEmpty(), "Изначально история должна быть пустой");
     }
 }

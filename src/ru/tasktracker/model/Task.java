@@ -5,17 +5,18 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
-    private static int counter = 0;
-    private final Integer id;
+    // УБИРАЕМ статический счетчик - он должен быть в менеджере
+    private Integer id; // меняем на Integer и убираем final
     private final String taskName;
     private final String taskDescription;
-    private final StatusTask statusTask;
+    private StatusTask statusTask; // убираем final для возможности обновления
     private final TypeTask type;
     private final Duration duration;
     private final LocalDateTime startTime;
 
+    // Конструктор по умолчанию - для десериализации Gson
     public Task() {
-        this.id = ++counter;
+        this.id = null;
         this.taskName = "";
         this.taskDescription = "";
         this.statusTask = StatusTask.NEW;
@@ -24,44 +25,43 @@ public class Task {
         this.startTime = null;
     }
 
+    // Конструктор для создания новой задачи (БЕЗ ID)
     public Task(String taskName,
                 String taskDescription,
                 LocalDateTime startTime,
                 Duration duration) {
-        this.type = TypeTask.TASK;
-        this.id = ++counter;
+        this.id = null; // Явно null - ID назначит менеджер
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.statusTask = StatusTask.NEW;
+        this.type = TypeTask.TASK;
         this.startTime = startTime;
         this.duration = duration;
     }
 
+    // Конструктор для обновления задачи (С ID)
     public Task(Integer id, String taskName,
                 String taskDescription,
                 StatusTask statusTask,
                 LocalDateTime startTime,
                 Duration duration) {
-        this.type = TypeTask.TASK;
-        this.id = id;
+        this.id = id; // ID передан явно - это обновление
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.statusTask = statusTask;
+        this.type = TypeTask.TASK;
         this.startTime = startTime;
         this.duration = duration;
-
-        if (id >= counter) {
-            counter = id + 1;
-        }
     }
 
+    // Конструкторы для подзадач (аналогично)
     public Task(TypeTask type, String taskName,
                 String taskDescription,
                 StatusTask statusTask,
                 LocalDateTime startTime,
                 Duration duration) {
+        this.id = null; // null для новой задачи
         this.type = type;
-        this.id = ++counter;
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.statusTask = statusTask;
@@ -73,8 +73,8 @@ public class Task {
                 String taskDescription,
                 LocalDateTime startTime,
                 Duration duration) {
+        this.id = null; // null для новой задачи
         this.type = type;
-        this.id = ++counter;
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.statusTask = StatusTask.NEW;
@@ -87,19 +87,26 @@ public class Task {
                 StatusTask statusTask,
                 LocalDateTime startTime,
                 Duration duration) {
+        this.id = id; // ID для обновления
         this.type = type;
-        this.id = id;
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.statusTask = statusTask;
         this.startTime = startTime;
         this.duration = duration;
-
-        if (id >= counter) {
-            counter = id + 1;
-        }
     }
 
+    // Добавляем сеттер для ID (чтобы менеджер мог установить ID)
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    // Добавляем сеттер для статуса (для обновлений)
+    public void setStatusTask(StatusTask statusTask) {
+        this.statusTask = statusTask;
+    }
+
+    // Геттеры остаются без изменений
     public TypeTask getType() {
         return type;
     }
@@ -152,6 +159,4 @@ public class Task {
     public String toString() {
         return "id " + id + ": " + taskName + " | " + taskDescription + " (" + statusTask + ")";
     }
-
 }
-

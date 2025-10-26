@@ -43,8 +43,14 @@ class EpicTest {
 
         manager.deleteEpicById(epicId);
 
-        assertNull(manager.getEpicById(epicId), "Эпик должен быть удален");
+        // Исправлено: используем assertThrows вместо assertNull
+        assertThrows(Exception.class, () -> manager.getEpicById(epicId),
+                "Должно выбрасываться исключение при поиске удаленного эпика");
         assertEquals(1, manager.getAllEpics().size());
+
+        // Проверяем, что остался только второй эпик
+        assertEquals(epic2.getId(), manager.getAllEpics().get(0).getId(),
+                "Должен остаться только второй эпик");
     }
 
     @Test
@@ -55,6 +61,10 @@ class EpicTest {
         manager.deleteAllEpics();
 
         assertEquals(0, manager.getAllEpics().size(), "Все эпики должны быть удалены");
+
+        // Проверяем, что действительно нельзя получить эпики по ID
+        assertThrows(Exception.class, () -> manager.getEpicById(epicId),
+                "Должно выбрасываться исключение при поиске удаленного эпика");
     }
 
     @Test
@@ -213,5 +223,29 @@ class EpicTest {
 
         assertEquals(StatusTask.IN_PROGRESS, manager.getEpicById(epicId).getStatusTask(),
                 "Эпик с одной подзадачей IN_PROGRESS должен иметь статус IN_PROGRESS");
+    }
+
+    // ДОПОЛНИТЕЛЬНЫЕ ТЕСТЫ ДЛЯ ПРОВЕРКИ УДАЛЕНИЯ
+
+    @Test
+    @DisplayName("Удаление эпика также удаляет его подзадачи")
+    void deleteEpicAlsoDeletesSubtasks() {
+        // Создаем подзадачи для эпика
+        SubTask subtask1 = manager.addSubTask(new SubTask("Subtask 1", "Description", epicId,
+                LocalDateTime.now(), Duration.ofMinutes(30)));
+        SubTask subtask2 = manager.addSubTask(new SubTask("Subtask 2", "Description", epicId,
+                LocalDateTime.now().plusHours(1), Duration.ofMinutes(45)));
+
+        assertEquals(2, manager.getAllSubTasks().size(), "Должно быть 2 подзадачи");
+
+        // Удаляем эпик
+        manager.deleteEpicById(epicId);
+
+        // Проверяем, что подзадачи тоже удалились
+        assertEquals(0, manager.getAllSubTasks().size(), "Все подзадачи должны быть удалены");
+
+        // Проверяем, что нельзя получить подзадачи по ID
+        assertThrows(Exception.class, () -> manager.getSubTaskById(subtask1.getId()),
+                "Подзадачи должны быть удалены вместе с эпиком");
     }
 }

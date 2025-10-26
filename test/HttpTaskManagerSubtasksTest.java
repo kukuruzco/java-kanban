@@ -1,5 +1,6 @@
 import com.google.gson.reflect.TypeToken;
 import org.junit.jupiter.api.Test;
+import ru.tasktracker.exceptions.NotFoundException;
 import ru.tasktracker.model.Epic;
 import ru.tasktracker.model.StatusTask;
 import ru.tasktracker.model.SubTask;
@@ -13,8 +14,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class HttpTaskManagerSubtasksTest extends HttpTaskServerTestBase {
 
@@ -151,6 +151,10 @@ class HttpTaskManagerSubtasksTest extends HttpTaskServerTestBase {
                 createdEpic.getId(), LocalDateTime.now(), Duration.ofMinutes(5));
         SubTask createdSubtask = manager.addSubTask(subtask);
 
+        // Проверяем, что подзадача добавлена
+        assertEquals(1, manager.getAllSubTasks().size(), "Должна быть одна подзадача перед удалением");
+        assertNotNull(manager.getSubTaskById(createdSubtask.getId()), "Подзадача должна существовать перед удалением");
+
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/subtasks/" + createdSubtask.getId());
         HttpRequest request = HttpRequest.newBuilder()
@@ -162,7 +166,81 @@ class HttpTaskManagerSubtasksTest extends HttpTaskServerTestBase {
 
         assertEquals(200, response.statusCode(), "Неверный статус код при удалении подзадачи");
 
+        // Проверяем, что подзадача действительно удалилась
         assertEquals(0, manager.getAllSubTasks().size(), "Подзадача должна была удалиться");
-        assertNull(manager.getSubTaskById(createdSubtask.getId()), "Подзадача не должна находиться по ID");
+
+        // Правильная проверка - после удаления getSubTaskById должен бросать исключение
+        assertThrows(NotFoundException.class, () -> manager.getSubTaskById(createdSubtask.getId()),
+                "После удаления getSubTaskById должен бросать NotFoundException");
+
+        // Дополнительная проверка: GET после DELETE должен вернуть 404
+        HttpRequest getRequest = HttpRequest.newBuilder()
+                .uri(url)
+                .GET()
+                .build();
+        HttpResponse<String> getResponse = client.send(getRequest, HttpResponse.BodyHandlers.ofString());
+        assertEquals(404, getResponse.statusCode(), "После удаления GET должен возвращать 404");
+    }
+
+    @Test
+    void testAddSubtaskWithInvalidEpic() throws IOException, InterruptedException {
+        SubTask subtask = new SubTask("Test Subtask", "Testing subtask",
+                999, LocalDateTime.now(), Duration.ofMinutes(5));
+
+        String subtaskJson = gson.toJson(subtask);
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8080/subtasks");
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(url)
+                .POST(HttpRequest.BodyPublishers.ofString(subtaskJson))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(404, response.statusCode(), "Ожидалась ошибка 404 при создании подзадачи с несуществующим эпиком");
+        assertEquals(0, manager.getAllSubTasks().size(), "Подзадача не должна была добавиться");
+    }
+
+    @Test
+    void testUpdateNonExistentSubtask() throws IOException, InterruptedException {
+        Epic epic = new Epic("Test Epic", "Testing epic");
+        manager.addEpic(epic);
+
+        SubTask nonExistentSubtask = new SubTask(999, "Non-existent Subtask", "Description",
+                StatusTask.DONE, 1, LocalDateTime.now(), Duration.ofMinutes(30));
+
+        String subtaskJson = gson.toJson(nonExistentSubtask);
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8080/subtasks");
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(url)
+                .POST(HttpRequest.BodyPublishers.ofString(subtaskJson))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(404, response.statusCode(), "Ожидалась ошибка 404 при обновлении несуществующей подзадачи");
+    }
+
+    @Test
+    void testAddSubtaskWithInvalidData() throws IOException, InterruptedException {
+        String invalidJson = "{ invalid json }";
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8080/subtasks");
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(url)
+                .POST(HttpRequest.BodyPublishers.ofString(invalidJson))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(400, response.statusCode(), "Ожидалась ошибка 400 при некорректных данных");
+        assertEquals(0, manager.getAllSubTasks().size(), "Подзадача не должна была добавиться");
     }
 }

@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.tasktracker.exceptions.NotFoundException;
 import ru.tasktracker.model.Epic;
 import ru.tasktracker.model.StatusTask;
 import ru.tasktracker.model.SubTask;
@@ -78,7 +79,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
         manager.deleteTaskById(task.getId());
 
-        assertNull(manager.getTaskById(task.getId()), "Задача должна быть удалена");
+        assertThrows(NotFoundException.class, () -> manager.getTaskById(task.getId()),
+                "После удаления getTaskById должен бросать NotFoundException");
         assertEquals(0, manager.getAllTasks().size());
     }
 
@@ -91,6 +93,30 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         manager.deleteAllTasks();
 
         assertEquals(0, manager.getAllTasks().size(), "Все задачи должны быть удалены");
+    }
+
+    @Test
+    @DisplayName("Получение несуществующей задачи")
+    void getNonExistentTask() {
+        assertThrows(NotFoundException.class, () -> manager.getTaskById(999),
+                "Получение несуществующей задачи должно бросать NotFoundException");
+    }
+
+    @Test
+    @DisplayName("Удаление несуществующей задачи")
+    void deleteNonExistentTask() {
+        assertThrows(NotFoundException.class, () -> manager.deleteTaskById(999),
+                "Удаление несуществующей задачи должно бросать NotFoundException");
+    }
+
+    @Test
+    @DisplayName("Обновление несуществующей задачи")
+    void updateNonExistentTask() {
+        Task task = new Task(999, "Non-existent", "Desc",
+                StatusTask.NEW, LocalDateTime.now(), Duration.ofMinutes(30));
+
+        assertThrows(NotFoundException.class, () -> manager.updateTask(task),
+                "Обновление несуществующей задачи должно бросать NotFoundException");
     }
 
     // ТЕСТЫ ДЛЯ EPIC
@@ -245,11 +271,37 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
         manager.deleteEpicById(epic.getId());
 
-        assertNull(manager.getEpicById(epic.getId()), "Эпик должен быть удален");
-        assertNull(manager.getSubTaskById(sub1.getId()), "Подзадачи должны быть удалены");
-        assertNull(manager.getSubTaskById(sub2.getId()), "Подзадачи должны быть удалены");
+        assertThrows(NotFoundException.class, () -> manager.getEpicById(epic.getId()),
+                "Эпик должен быть удален");
+        assertThrows(NotFoundException.class, () -> manager.getSubTaskById(sub1.getId()),
+                "Подзадачи должны быть удалены");
+        assertThrows(NotFoundException.class, () -> manager.getSubTaskById(sub2.getId()),
+                "Подзадачи должны быть удалены");
         assertEquals(0, manager.getAllEpics().size());
         assertEquals(0, manager.getAllSubTasks().size());
+    }
+
+    @Test
+    @DisplayName("Получение несуществующего эпика")
+    void getNonExistentEpic() {
+        assertThrows(NotFoundException.class, () -> manager.getEpicById(999),
+                "Получение несуществующего эпика должно бросать NotFoundException");
+    }
+
+    @Test
+    @DisplayName("Удаление несуществующего эпика")
+    void deleteNonExistentEpic() {
+        assertThrows(NotFoundException.class, () -> manager.deleteEpicById(999),
+                "Удаление несуществующего эпика должно бросать NotFoundException");
+    }
+
+    @Test
+    @DisplayName("Обновление несуществующего эпика")
+    void updateNonExistentEpic() {
+        Epic epic = new Epic(999, "Non-existent", "Desc", StatusTask.NEW);
+
+        assertThrows(NotFoundException.class, () -> manager.updateEpic(epic),
+                "Обновление несуществующего эпика должно бросать NotFoundException");
     }
 
     // ТЕСТЫ ДЛЯ SUBTASK
@@ -270,10 +322,10 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     @DisplayName("Добавление подзадачи с несуществующим эпиком")
     void addSubTaskWithInvalidEpic() {
-        SubTask subTask = manager.addSubTask(new SubTask("Sub", "Desc", 999,
-                LocalDateTime.now(), Duration.ofMinutes(30)));
-
-        assertNull(subTask, "Подзадача с несуществующим эпиком не должна добавляться");
+        assertThrows(NotFoundException.class, () ->
+                        manager.addSubTask(new SubTask("Sub", "Desc", 999,
+                                LocalDateTime.now(), Duration.ofMinutes(30))),
+                "Добавление подзадачи к несуществующему эпику должно бросать NotFoundException");
     }
 
     @Test
@@ -318,9 +370,34 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
         manager.deleteSubTaskById(subTask.getId());
 
-        assertNull(manager.getSubTaskById(subTask.getId()), "Подзадача должна быть удалена");
+        assertThrows(NotFoundException.class, () -> manager.getSubTaskById(subTask.getId()),
+                "Подзадача должна быть удалена");
         assertEquals(0, manager.getAllSubTasks().size());
         assertEquals(0, manager.getEpicById(epic.getId()).getSubTaskIds().size());
+    }
+
+    @Test
+    @DisplayName("Получение несуществующей подзадачи")
+    void getNonExistentSubTask() {
+        assertThrows(NotFoundException.class, () -> manager.getSubTaskById(999),
+                "Получение несуществующей подзадачи должно бросать NotFoundException");
+    }
+
+    @Test
+    @DisplayName("Удаление несуществующей подзадачи")
+    void deleteNonExistentSubTask() {
+        assertThrows(NotFoundException.class, () -> manager.deleteSubTaskById(999),
+                "Удаление несуществующей подзадачи должно бросать NotFoundException");
+    }
+
+    @Test
+    @DisplayName("Обновление несуществующей подзадачи")
+    void updateNonExistentSubTask() {
+        SubTask subTask = new SubTask(999, "Non-existent", "Desc",
+                StatusTask.NEW, 1, LocalDateTime.now(), Duration.ofMinutes(30));
+
+        assertThrows(NotFoundException.class, () -> manager.updateSubTask(subTask),
+                "Обновление несуществующей подзадачи должно бросать NotFoundException");
     }
 
     // ТЕСТЫ ДЛЯ ИСТОРИИ

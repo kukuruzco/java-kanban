@@ -1,8 +1,10 @@
 package ru.tasktracker.service.http.handlers;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
+import ru.tasktracker.exceptions.NotFoundException;
 import ru.tasktracker.model.Epic;
 import ru.tasktracker.model.SubTask;
 import ru.tasktracker.service.managers.TaskManager;
@@ -51,18 +53,23 @@ public class EpicsHandler extends BaseHttpHandler {
             String[] pathParts = path.split("/");
             int id = Integer.parseInt(pathParts[2]);
 
-            Epic epic = taskManager.getEpicById(id);
-            if (epic != null) {
+            try {
+                Epic epic = taskManager.getEpicById(id);
                 sendText(exchange, gson.toJson(epic));
-            } else {
+            } catch (NotFoundException e) {
                 sendNotFound(exchange);
             }
         } else if (path.matches("/epics/\\d+/subtasks")) {
             String[] pathParts = path.split("/");
             int epicId = Integer.parseInt(pathParts[2]);
 
-            List<SubTask> subtasks = taskManager.getSubtasksByEpic(epicId);
-            sendText(exchange, gson.toJson(subtasks));
+            try {
+                taskManager.getEpicById(epicId);
+                List<SubTask> subtasks = taskManager.getSubtasksByEpic(epicId);
+                sendText(exchange, gson.toJson(subtasks));
+            } catch (NotFoundException e) {
+                sendNotFound(exchange);
+            }
         } else {
             sendNotFound(exchange);
         }
@@ -77,32 +84,28 @@ public class EpicsHandler extends BaseHttpHandler {
         }
 
         try {
-            Epic epic = gson.fromJson(body, Epic.class);
+            JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
+            boolean hasIdInRequest = jsonObject.has("id") && !jsonObject.get("id").isJsonNull();
 
-            if (epic == null) {
-                sendText(exchange, "{\"error\": \"Failed to parse epic from JSON\"}", 400);
+            if (hasIdInRequest) {
+                sendText(exchange, "{\"error\": \"ID should not be provided when creating epic\"}", 400);
                 return;
             }
+
+            Epic epic = gson.fromJson(body, Epic.class);
 
             if (epic.getTaskName() == null || epic.getTaskName().trim().isEmpty()) {
                 sendText(exchange, "{\"error\": \"Epic name is required\"}", 400);
                 return;
             }
 
-            boolean epicExists = epic.getId() != null && taskManager.getEpicById(epic.getId()) != null;
-
-            if (epicExists) {
-                taskManager.updateEpic(epic);
-                sendText(exchange, "{\"message\": \"Epic updated\"}", 201);
-            } else {
-                Epic createdEpic = taskManager.addEpic(epic);
-                sendText(exchange, gson.toJson(createdEpic), 201);
-            }
+            Epic createdEpic = taskManager.addEpic(epic);
+            sendText(exchange, gson.toJson(createdEpic), 201);
 
         } catch (JsonSyntaxException e) {
             sendText(exchange, "{\"error\": \"Invalid JSON syntax: " + e.getMessage() + "\"}", 400);
         } catch (Exception e) {
-            sendInternalError(exchange);
+            sendText(exchange, "{\"error\": \"Failed to create epic: " + e.getMessage() + "\"}", 400);
         }
     }
 
@@ -111,11 +114,10 @@ public class EpicsHandler extends BaseHttpHandler {
             String[] pathParts = path.split("/");
             int id = Integer.parseInt(pathParts[2]);
 
-            Epic epic = taskManager.getEpicById(id);
-            if (epic != null) {
+            try {
                 taskManager.deleteEpicById(id);
                 sendText(exchange, "{\"message\": \"Epic deleted\"}");
-            } else {
+            } catch (NotFoundException e) {
                 sendNotFound(exchange);
             }
         } else {

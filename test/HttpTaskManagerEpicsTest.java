@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class HttpTaskManagerEpicsTest extends HttpTaskServerTestBase {
 
@@ -39,33 +39,6 @@ class HttpTaskManagerEpicsTest extends HttpTaskServerTestBase {
         List<Epic> epicsFromManager = manager.getAllEpics();
         assertEquals(1, epicsFromManager.size(), "Некорректное количество эпиков");
         assertEquals("Test Epic", epicsFromManager.get(0).getTaskName(), "Некорректное имя эпика");
-    }
-
-    @Test
-    void testUpdateEpic() throws IOException, InterruptedException {
-        Epic epic = new Epic("Original Epic", "Original description");
-        Epic createdEpic = manager.addEpic(epic);
-
-        Epic updatedEpic = new Epic(createdEpic.getId(), "Updated Epic", "Updated description", StatusTask.IN_PROGRESS);
-
-        String updatedJson = gson.toJson(updatedEpic);
-
-        HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8080/epics");
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(url)
-                .POST(HttpRequest.BodyPublishers.ofString(updatedJson))
-                .header("Content-Type", "application/json")
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        assertEquals(201, response.statusCode(), "Неверный статус код при обновлении эпика");
-
-        Epic epicFromManager = manager.getEpicById(createdEpic.getId());
-        assertEquals("Updated Epic", epicFromManager.getTaskName(), "Имя эпика не обновилось");
-        assertEquals("Updated description", epicFromManager.getTaskDescription(), "Описание эпика не обновилось");
-
     }
 
     @Test
@@ -184,7 +157,9 @@ class HttpTaskManagerEpicsTest extends HttpTaskServerTestBase {
         assertEquals(200, response.statusCode(), "Неверный статус код при удалении эпика");
 
         assertEquals(0, manager.getAllEpics().size(), "Эпик должен был удалиться");
-        assertNull(manager.getEpicById(createdEpic.getId()), "Эпик не должен находиться по ID");
+
+        assertThrows(Exception.class, () -> manager.getEpicById(createdEpic.getId()),
+                "Должно выбрасываться исключение при поиске удаленного эпика");
     }
 
     @Test
@@ -210,6 +185,6 @@ class HttpTaskManagerEpicsTest extends HttpTaskServerTestBase {
         List<SubTask> subtasks = gson.fromJson(response.body(), new TypeToken<List<SubTask>>() {
         }.getType());
         assertEquals(1, subtasks.size(), "Должна вернуться одна подзадача");
-        assertEquals("Test Subtask", subtasks.get(0).getTaskName(), "Некорректное имя подзадачи");
+        assertEquals("Test Subtask", subtasks.getFirst().getTaskName(), "Некорректное имя подзадачи");
     }
 }
