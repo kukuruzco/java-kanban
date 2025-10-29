@@ -1,28 +1,46 @@
 package ru.tasktracker.model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
-    private ArrayList<Integer> subtaskIds = new ArrayList<>();
+    private List<Integer> subTaskIds = new ArrayList<>();
+    private LocalDateTime endTime;
 
     public Epic(String taskName, String taskDescription) {
-        super(-1, taskName, taskDescription, StatusTask.NEW);
+        super(TypeTask.EPIC, taskName, taskDescription, StatusTask.NEW, null, null);
     }
 
-    public Epic(int id, String taskName, String taskDescription, StatusTask statusTask) {
-        super(id, taskName, taskDescription, statusTask);
+    public Epic(Integer id, String taskName, String taskDescription, StatusTask statusTask) {
+        super(TypeTask.EPIC, id, taskName, taskDescription, statusTask, null, null);
     }
 
-    public ArrayList<Integer> getSubtaskIds() {
-        return subtaskIds;
+    public Epic(Integer id, String taskName, String taskDescription, StatusTask statusTask,
+                List<Integer> subTaskIds) {
+        super(TypeTask.EPIC, id, taskName, taskDescription, statusTask, null, null);
+        this.subTaskIds = new ArrayList<>(subTaskIds);
+        this.endTime = null;
     }
 
-    public void setSubtaskIds(ArrayList<Integer> subtaskIds) {
-        this.subtaskIds = subtaskIds;
+    public Epic(Integer id, String taskName, String taskDescription, StatusTask statusTask,
+                List<Integer> subTaskIds, LocalDateTime startTime, Duration duration, LocalDateTime endTime) {
+        super(TypeTask.EPIC, id, taskName, taskDescription, statusTask, startTime, duration);
+        this.subTaskIds = new ArrayList<>(subTaskIds);
+        this.endTime = endTime;
     }
 
-    public StatusTask updateStatus(ArrayList<SubTask> epicSubtasks) {
+    public List<Integer> getSubTaskIds() {
+        return subTaskIds;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public StatusTask updateStatus(List<SubTask> epicSubtasks) {
         if (epicSubtasks.isEmpty()) {
             return StatusTask.NEW;  // Нет подзадач -> статус NEW
         }
@@ -65,8 +83,7 @@ public class Epic extends Task {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getTaskName(), getTaskDescription(),
-                getStatusTask(), subtaskIds);
+        return Objects.hash(getId());
     }
 
 }

@@ -1,52 +1,54 @@
-package ru.tasktracker.service;
+package ru.tasktracker.service.managers;
 
 import ru.tasktracker.model.Epic;
 import ru.tasktracker.model.SubTask;
 import ru.tasktracker.model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
+    List<Task> getPrioritizedTasks();
+
     List<Task> getHistory();
 
     Task addTask(Task task);
 
-    ArrayList<Task> getAllTasks();
+    List<Task> getAllTasks();
 
     void deleteAllTasks();
 
-    Task getTaskById(int Id);
+    Task getTaskById(Integer id);
+
+    void deleteSubTaskById(Integer subtaskId);
 
     void updateTask(Task updatedTask);
 
-    void deleteTaskById(int Id);
+    SubTask getSubTaskById(Integer id);
 
-    ArrayList<Epic> getAllEpics();
+    List<Epic> getAllEpics();
 
     Epic addEpic(Epic epic);
 
     void deleteAllEpics();
 
-    Epic getEpicById(int Id);
-
     void updateEpic(Epic updatedEpic);
 
-    void deleteEpicById(int epicId);
+    void deleteTaskById(Integer id);
 
     SubTask addSubTask(SubTask subtask);
 
-    ArrayList<SubTask> getAllSubTasks();
+    List<SubTask> getAllSubTasks();
 
-    ArrayList<SubTask> getSubtasksByEpic(int epicId);
+    List<SubTask> getSubtasksByEpic(Integer epicId);
 
-    SubTask getSubTaskById(int id);
+    Epic getEpicById(Integer id);
 
-    void deleteSubTaskById(int subTaskId);
+    void deleteEpicById(Integer epicId);
 
     void deleteAllSubTasks();
 
     void updateSubTask(SubTask updatedSubTask);
 
+    boolean isTaskOverlap(Task task);
 }
 

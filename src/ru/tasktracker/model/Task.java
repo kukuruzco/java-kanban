@@ -1,28 +1,117 @@
 package ru.tasktracker.model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
-    private final int id;
-    private String taskName;
-    private String taskDescription;
-    private StatusTask statusTask;
+    // УБИРАЕМ статический счетчик - он должен быть в менеджере
+    private Integer id; // меняем на Integer и убираем final
+    private final String taskName;
+    private final String taskDescription;
+    private StatusTask statusTask; // убираем final для возможности обновления
+    private final TypeTask type;
+    private final Duration duration;
+    private final LocalDateTime startTime;
 
-    public Task(String taskName, String taskDescription) {
-        this.id = -1;
+    // Конструктор по умолчанию - для десериализации Gson
+    public Task() {
+        this.id = null;
+        this.taskName = "";
+        this.taskDescription = "";
+        this.statusTask = StatusTask.NEW;
+        this.type = TypeTask.TASK;
+        this.duration = Duration.ZERO;
+        this.startTime = null;
+    }
+
+    // Конструктор для создания новой задачи (БЕЗ ID)
+    public Task(String taskName,
+                String taskDescription,
+                LocalDateTime startTime,
+                Duration duration) {
+        this.id = null; // Явно null - ID назначит менеджер
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.statusTask = StatusTask.NEW;
+        this.type = TypeTask.TASK;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
-    public Task(int id, String taskName, String taskDescription, StatusTask statusTask) {
-        this.id = id;
+    // Конструктор для обновления задачи (С ID)
+    public Task(Integer id, String taskName,
+                String taskDescription,
+                StatusTask statusTask,
+                LocalDateTime startTime,
+                Duration duration) {
+        this.id = id; // ID передан явно - это обновление
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.statusTask = statusTask;
+        this.type = TypeTask.TASK;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
-    public int getId() {
+    // Конструкторы для подзадач (аналогично)
+    public Task(TypeTask type, String taskName,
+                String taskDescription,
+                StatusTask statusTask,
+                LocalDateTime startTime,
+                Duration duration) {
+        this.id = null; // null для новой задачи
+        this.type = type;
+        this.taskName = taskName;
+        this.taskDescription = taskDescription;
+        this.statusTask = statusTask;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
+    public Task(TypeTask type, String taskName,
+                String taskDescription,
+                LocalDateTime startTime,
+                Duration duration) {
+        this.id = null; // null для новой задачи
+        this.type = type;
+        this.taskName = taskName;
+        this.taskDescription = taskDescription;
+        this.statusTask = StatusTask.NEW;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
+    public Task(TypeTask type, Integer id, String taskName,
+                String taskDescription,
+                StatusTask statusTask,
+                LocalDateTime startTime,
+                Duration duration) {
+        this.id = id; // ID для обновления
+        this.type = type;
+        this.taskName = taskName;
+        this.taskDescription = taskDescription;
+        this.statusTask = statusTask;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
+    // Добавляем сеттер для ID (чтобы менеджер мог установить ID)
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    // Добавляем сеттер для статуса (для обновлений)
+    public void setStatusTask(StatusTask statusTask) {
+        this.statusTask = statusTask;
+    }
+
+    // Геттеры остаются без изменений
+    public TypeTask getType() {
+        return type;
+    }
+
+    public Integer getId() {
         return id;
     }
 
@@ -38,12 +127,19 @@ public class Task {
         return statusTask;
     }
 
-    public void setTaskName(String taskName) { this.taskName = taskName; }
+    public Duration getDuration() {
+        return duration;
+    }
 
-    public void setTaskDescription(String taskDescription) { this.taskDescription = taskDescription; }
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
 
-    public void setStatusTask(StatusTask statusTask) {
-        this.statusTask = statusTask;
+    public LocalDateTime getEndTime() {
+        if (startTime == null || duration == null) {
+            return null;
+        }
+        return startTime.plus(duration);
     }
 
     @Override
@@ -51,7 +147,7 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id;
+        return Objects.equals(id, task.id);
     }
 
     @Override
@@ -61,8 +157,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return "ID " + id + ": " + taskName + " | " + taskDescription + " (" + statusTask + ")";
+        return "id " + id + ": " + taskName + " | " + taskDescription + " (" + statusTask + ")";
     }
-
 }
-
